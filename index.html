@@ -1,0 +1,2704 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>让明天更安静</title>
+  <style>
+    :root {
+      --ink: #20242a;
+      --paper: #f8f4eb;
+      --warm: #f1c66f;
+      --gold: #e7a93d;
+      --blue: #6f92a7;
+      --brick: #a85f50;
+      --night: #161b22;
+      --muted: rgba(255, 255, 255, .72);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      color: var(--paper);
+      background: #111821;
+      font-family: "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif;
+    }
+
+    body {
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    .app {
+      position: relative;
+      width: 100vw;
+      height: 100dvh;
+      min-height: 560px;
+      overflow: hidden;
+      background: #111821;
+      isolation: isolate;
+    }
+
+    .slides {
+      height: 100%;
+      transform: translate3d(0, 0, 0);
+      transition: transform 760ms cubic-bezier(.2, .78, .16, 1);
+    }
+
+    .scene {
+      position: relative;
+      width: 100vw;
+      height: 100dvh;
+      min-height: 560px;
+      overflow: hidden;
+      padding: calc(28px + var(--safe-top)) 64px calc(28px + var(--safe-bottom)) 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -3;
+      background:
+        linear-gradient(180deg, rgba(16, 24, 34, .18), rgba(9, 12, 15, .55)),
+        radial-gradient(circle at 50% 22%, rgba(244, 221, 166, .22), transparent 36%),
+        linear-gradient(145deg, #344a58 0%, #172331 52%, #101820 100%);
+    }
+
+    .scene::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      opacity: .26;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent);
+    }
+
+    .scene.is-warm::before {
+      background:
+        linear-gradient(180deg, rgba(255, 247, 226, .08), rgba(99, 78, 52, .2)),
+        radial-gradient(circle at 50% 20%, rgba(255, 224, 150, .42), transparent 42%),
+        linear-gradient(155deg, #6f92a7 0%, #d4a369 58%, #f5e7c4 100%);
+    }
+
+    .scene.is-video::before {
+      background: radial-gradient(circle at 50% 18%, #2a3039, #090b0f 68%);
+    }
+
+    .scene.is-final::before {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(251, 234, 190, .5)),
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.68), transparent 44%),
+        linear-gradient(155deg, #8eb4c2 0%, #f0d692 52%, #f9f1dc 100%);
+    }
+
+    .scene.cover-scene::before {
+      background:
+        linear-gradient(180deg, rgba(16, 24, 34, .18), rgba(9, 12, 15, .55)),
+        radial-gradient(circle at 50% 22%, rgba(244, 221, 166, .22), transparent 36%),
+        linear-gradient(145deg, #344a58 0%, #172331 52%, #101820 100%);
+    }
+
+    .scene.tea-scene::before {
+      background:
+        radial-gradient(ellipse at 52% 58%, rgba(216, 162, 84, .22), transparent 38%),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(160deg, #24313a 0%, #2a2523 56%, #10161b 100%);
+      background-size: 100% 100%, 52px 52px, 52px 52px, 100% 100%;
+    }
+
+    .scene.rain-scene::before {
+      background:
+        radial-gradient(circle at 70% 20%, rgba(177, 207, 218, .28), transparent 34%),
+        linear-gradient(180deg, rgba(86, 123, 140, .3), rgba(35, 48, 57, .72)),
+        linear-gradient(145deg, #617d8a 0%, #2b3d48 58%, #17212a 100%);
+    }
+
+    .scene.wall-scene::before {
+      background:
+        radial-gradient(circle at 50% 36%, rgba(232, 185, 104, .22), transparent 34%),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(145deg, #2c3640 0%, #262a2f 48%, #171b20 100%);
+      background-size: 100% 100%, 52px 52px, 100% 100%;
+    }
+
+    .scene.reach-scene::before {
+      background:
+        radial-gradient(circle at 50% 52%, rgba(255, 218, 132, .36), transparent 31%),
+        linear-gradient(180deg, #24303a 0%, #465b61 56%, #191f25 100%);
+    }
+
+    .scene.kite-scene::before {
+      background:
+        radial-gradient(circle at 72% 18%, rgba(255, 225, 145, .34), transparent 28%),
+        linear-gradient(180deg, #7da4b5 0%, #566d72 45%, #7a4b40 100%);
+    }
+
+    .scene.dove-scene::before {
+      background:
+        radial-gradient(circle at 80% 22%, rgba(255, 221, 130, .42), transparent 36%),
+        linear-gradient(180deg, #67818a 0%, #8f6554 60%, #4b302f 100%);
+    }
+
+    .scene.bg-war::before,
+    .scene.war-list-scene::before {
+      background:
+        linear-gradient(180deg, rgba(16, 24, 34, .24), rgba(9, 12, 15, .68)),
+        radial-gradient(circle at 50% 22%, rgba(220, 169, 102, .16), transparent 36%),
+        linear-gradient(145deg, #2e3b43 0%, #17202a 52%, #101820 100%);
+    }
+
+    .scene.harm-scene::before {
+      background:
+        radial-gradient(circle at 70% 24%, rgba(156, 89, 73, .24), transparent 36%),
+        linear-gradient(160deg, #2e3338 0%, #3a2626 56%, #12171d 100%);
+    }
+
+    .scene.world-scene::before {
+      background:
+        radial-gradient(circle at 22% 22%, rgba(173, 210, 219, .28), transparent 34%),
+        linear-gradient(160deg, #273946 0%, #47656d 55%, #17232d 100%);
+    }
+
+    .scene.china-scene::before {
+      background:
+        radial-gradient(circle at 78% 20%, rgba(255, 218, 126, .32), transparent 36%),
+        linear-gradient(160deg, #463337 0%, #7a514b 52%, #1b2026 100%);
+    }
+
+    .scene.bg-final::before {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(251, 234, 190, .5)),
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.68), transparent 44%),
+        linear-gradient(155deg, #8eb4c2 0%, #f0d692 52%, #f9f1dc 100%);
+    }
+
+    .art-card {
+      position: absolute;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 8px;
+      background: rgba(255,255,255,.1);
+      box-shadow: 0 22px 54px rgba(0,0,0,.24);
+      opacity: .72;
+    }
+
+    .art-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.26)),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 100% 100%, 28px 100%;
+      mix-blend-mode: soft-light;
+    }
+
+    .art-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      filter: saturate(.78) contrast(.94);
+    }
+
+    .art-card.alley {
+      right: -18px;
+      bottom: 14%;
+      width: min(42vw, 190px);
+      height: min(32vh, 260px);
+      transform: rotate(2deg);
+      opacity: .54;
+    }
+
+    .art-card.war {
+      right: 18px;
+      top: 24%;
+      width: min(36vw, 168px);
+      height: min(26vh, 220px);
+      transform: rotate(-2deg);
+      opacity: .58;
+    }
+
+    .art-card.final {
+      right: -10px;
+      top: 28%;
+      width: min(38vw, 180px);
+      height: min(25vh, 220px);
+      transform: rotate(2deg);
+      opacity: .44;
+    }
+
+    .art-card.sticker-a,
+    .art-card.sticker-b {
+      width: min(35vw, 150px);
+      height: min(22vh, 178px);
+      opacity: .42;
+    }
+
+    .art-card.sticker-a {
+      right: -28px;
+      top: 28%;
+      transform: rotate(2deg);
+    }
+
+    .art-card.sticker-b {
+      left: -28px;
+      bottom: 15%;
+      transform: rotate(-2deg);
+    }
+
+    .art-card.sticker-wide {
+      left: 50%;
+      bottom: 15%;
+      width: min(72vw, 310px);
+      height: 118px;
+      transform: translateX(-50%) rotate(-1deg);
+      opacity: .42;
+    }
+
+    .topbar {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      top: calc(12px + var(--safe-top));
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .progress {
+      display: flex;
+      gap: 6px;
+      width: min(180px, 48vw);
+    }
+
+    .dot {
+      height: 3px;
+      flex: 1;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      overflow: hidden;
+    }
+
+    .dot span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: rgba(255,255,255,.82);
+      transition: width 420ms ease;
+    }
+
+    .dot.on span { width: 100%; }
+
+    .audio-toggle {
+      pointer-events: auto;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 50%;
+      color: #fff;
+      background: rgba(12, 17, 22, .38);
+      backdrop-filter: blur(14px);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .audio-toggle svg {
+      width: 19px;
+      height: 19px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .lyric-rail {
+      position: fixed;
+      right: 5px;
+      top: 24%;
+      z-index: 35;
+      width: 34px;
+      height: 44%;
+      padding: 10px 5px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      background: rgba(12, 17, 22, .38);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 18px 42px rgba(0,0,0,.22);
+      overflow: hidden;
+      opacity: .74;
+      pointer-events: none;
+    }
+
+    .lyric-track {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transition: transform .55s cubic-bezier(.2, .78, .16, 1);
+    }
+
+    .lyric-item {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      color: rgba(255,255,255,.45);
+      font-size: 11px;
+      line-height: 1.15;
+      letter-spacing: 0;
+      white-space: nowrap;
+      transition: color .35s ease, transform .35s ease, text-shadow .35s ease;
+    }
+
+    .lyric-item.active {
+      color: #fff4cf;
+      transform: scale(1.04);
+      text-shadow: 0 0 16px rgba(255,211,116,.6);
+    }
+
+    .scene.is-final ~ .lyric-rail,
+    .scene.is-video ~ .lyric-rail {
+      opacity: .45;
+    }
+
+    .copy {
+      position: relative;
+      z-index: 5;
+      max-width: min(360px, calc(100vw - 92px));
+      margin-top: 52px;
+      text-shadow: 0 2px 18px rgba(0,0,0,.3);
+    }
+
+    .copy.center {
+      margin: auto 0;
+      text-align: center;
+      align-self: center;
+      width: min(420px, 100%);
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    h1, h2 {
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.16;
+    }
+
+    h1 {
+      font-size: clamp(34px, 10.4vw, 52px);
+    }
+
+    h2 {
+      font-size: clamp(27px, 7.6vw, 40px);
+    }
+
+    p {
+      margin: 16px 0 0;
+      font-size: 16px;
+      line-height: 1.72;
+      color: rgba(255,255,255,.82);
+    }
+
+    .bottom-action {
+      position: relative;
+      z-index: 8;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .primary-btn {
+      min-height: 48px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 999px;
+      color: #1e2326;
+      background: linear-gradient(135deg, #fff5d8, #e7b95e);
+      box-shadow: 0 14px 36px rgba(0,0,0,.28);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .ghost-btn {
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+
+    .hint {
+      color: rgba(255,255,255,.64);
+      font-size: 13px;
+    }
+
+    .window {
+      position: absolute;
+      left: 50%;
+      top: 14%;
+      width: min(68vw, 330px);
+      aspect-ratio: 1 / 1.34;
+      transform: translateX(-50%);
+      border: 9px solid rgba(244,236,214,.72);
+      border-radius: 3px;
+      box-shadow: inset 0 0 60px rgba(255,240,185,.2), 0 28px 80px rgba(0,0,0,.36);
+      background:
+        linear-gradient(90deg, transparent 48%, rgba(244,236,214,.72) 49%, rgba(244,236,214,.72) 51%, transparent 52%),
+        linear-gradient(180deg, transparent 48%, rgba(244,236,214,.62) 49%, rgba(244,236,214,.62) 51%, transparent 52%),
+        radial-gradient(circle at 52% 16%, rgba(255,225,139,.72), transparent 28%),
+        linear-gradient(180deg, #81a8b5, #34495a 72%, #1c2631);
+    }
+
+    .curtain {
+      position: absolute;
+      top: 7%;
+      width: 22%;
+      height: 58%;
+      background: linear-gradient(90deg, rgba(230,214,190,.14), rgba(255,255,255,.34), rgba(211,191,164,.12));
+      filter: blur(.2px);
+      animation: curtain 4.8s ease-in-out infinite;
+    }
+
+    .curtain.left { left: 9%; border-radius: 0 0 30px 10px; }
+    .curtain.right { right: 9%; border-radius: 0 0 10px 30px; animation-delay: -1.8s; }
+
+    .sill {
+      position: absolute;
+      left: 50%;
+      top: calc(14% + min(68vw, 330px) * 1.34 - 4px);
+      width: min(78vw, 380px);
+      height: 28px;
+      transform: translateX(-50%);
+      border-radius: 3px;
+      background: linear-gradient(180deg, #e6d5b7, #a77758);
+      box-shadow: 0 20px 40px rgba(0,0,0,.25);
+    }
+
+    .dove {
+      position: absolute;
+      z-index: 4;
+      width: 88px;
+      height: 62px;
+      transform-origin: center;
+      cursor: pointer;
+    }
+
+    .dove::before {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 24px;
+      width: 48px;
+      height: 28px;
+      border-radius: 52% 48% 46% 52%;
+      background: #f7f4eb;
+      box-shadow: inset -9px -4px 0 rgba(193,199,198,.65);
+    }
+
+    .dove::after {
+      content: "";
+      position: absolute;
+      left: 58px;
+      top: 18px;
+      width: 24px;
+      height: 22px;
+      border-radius: 50%;
+      background: #f7f4eb;
+      box-shadow: inset -4px -3px 0 rgba(199,205,205,.62);
+    }
+
+    .wing {
+      position: absolute;
+      left: 26px;
+      top: 11px;
+      width: 42px;
+      height: 34px;
+      border-radius: 55% 45% 20% 70%;
+      background: #ffffff;
+      transform-origin: 14px 28px;
+      animation: idleWing 3.6s ease-in-out infinite;
+    }
+
+    .beak {
+      position: absolute;
+      left: 78px;
+      top: 26px;
+      width: 12px;
+      height: 8px;
+      background: #e0ad4b;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    .dove .eye {
+      position: absolute;
+      left: 70px;
+      top: 24px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #262b2e;
+      z-index: 2;
+    }
+
+    .dove.home { left: calc(50% + 24px); top: calc(14% + min(68vw, 330px) * 1.34 - 58px); }
+    .dove.wall-dove { left: calc(50% + 46px); top: 22%; transform: scale(.78); }
+    .dove.brick-dove { left: calc(50% + 66px); top: 42%; transform: scale(.68); }
+    .dove.palm-dove { left: 50%; top: 54%; transform: translate(-50%, -50%) scale(.75); opacity: 0; transition: opacity .6s ease, transform .8s ease; }
+    .dove.palm-dove.show { opacity: 1; transform: translate(-50%, -64%) scale(.86); }
+    .dove.final-dove { left: calc(50% - 32px); top: 31%; transform: scale(.78); animation: finalFly 5s ease-in-out infinite; }
+
+    .table {
+      position: absolute;
+      left: 50%;
+      bottom: 13%;
+      width: min(76vw, 360px);
+      height: 116px;
+      transform: translateX(-50%);
+      border-radius: 50% 50% 12px 12px / 18% 18% 12px 12px;
+      background: linear-gradient(180deg, #9a654d, #6f4638);
+      box-shadow: 0 28px 70px rgba(0,0,0,.34);
+    }
+
+    .cup {
+      position: absolute;
+      bottom: 48px;
+      width: 46px;
+      height: 33px;
+      border-radius: 0 0 14px 14px;
+      background: linear-gradient(180deg, #fff8e6, #d9bd8e);
+      box-shadow: inset 0 5px 0 rgba(94,62,40,.3);
+    }
+
+    .cup::before {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: -36px;
+      width: 7px;
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(255,246,222,.4);
+      filter: blur(3px);
+      animation: steam 2.8s ease-in-out infinite;
+    }
+
+    .cup::after {
+      content: "";
+      position: absolute;
+      right: -13px;
+      top: 9px;
+      width: 17px;
+      height: 14px;
+      border: 4px solid #dbc292;
+      border-left: 0;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .cup.one { left: 26%; }
+    .cup.two { right: 28%; }
+
+    .shadow-person {
+      position: absolute;
+      bottom: 20%;
+      width: 72px;
+      height: 170px;
+      opacity: .32;
+      filter: blur(1px);
+    }
+
+    .shadow-person::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: #10151a;
+    }
+
+    .shadow-person::after {
+      content: "";
+      display: block;
+      width: 72px;
+      height: 120px;
+      border-radius: 40px 40px 12px 12px;
+      background: #10151a;
+    }
+
+    .shadow-person.left { left: 12%; }
+    .shadow-person.right { right: 12%; transform: scaleX(-1); }
+
+    .ledger-board {
+      position: absolute;
+      left: 50%;
+      top: 37%;
+      z-index: 3;
+      width: min(82vw, 380px);
+      height: 42%;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        rgba(10, 15, 20, .22);
+      background-size: 34px 34px;
+      box-shadow: inset 0 0 60px rgba(0,0,0,.2), 0 18px 42px rgba(0,0,0,.22);
+    }
+
+    .ledger-cost {
+      position: absolute;
+      inset: 28px;
+      display: grid;
+      place-items: center;
+      color: rgba(255,244,208,.88);
+      font-size: 20px;
+      line-height: 1.7;
+      text-align: center;
+      opacity: .24;
+      transition: opacity .6s ease;
+    }
+
+    .ledger-board.revealed .ledger-cost {
+      opacity: 1;
+    }
+
+    .interest-chip {
+      position: absolute;
+      z-index: 7;
+      min-width: 82px;
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 8px;
+      color: rgba(255,255,255,.92);
+      background: rgba(28, 36, 43, .58);
+      backdrop-filter: blur(14px);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 12px 24px rgba(0,0,0,.22);
+      cursor: pointer;
+      user-select: none;
+      transition: opacity .35s ease, transform .35s ease, background .35s ease;
+    }
+
+    .interest-chip.done {
+      opacity: .25;
+      transform: scale(.92);
+      background: rgba(255, 214, 125, .16);
+    }
+
+    .word-chip {
+      position: absolute;
+      z-index: 7;
+      min-width: 76px;
+      min-height: 38px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      color: rgba(255,255,255,.9);
+      background: rgba(19, 26, 33, .38);
+      backdrop-filter: blur(14px);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 12px 24px rgba(0,0,0,.18);
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .word-chip.done {
+      opacity: 0;
+      transform: scale(.75);
+      pointer-events: none;
+    }
+
+    .complete-line {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: calc(22% + var(--safe-bottom));
+      z-index: 7;
+      text-align: center;
+      color: #fff7df;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .5s ease, transform .5s ease;
+      pointer-events: none;
+      line-height: 1.7;
+      font-size: 18px;
+    }
+
+    .complete-line.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .rain-lane {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(123, 160, 176, .25), transparent 45%),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 100% 100%, 44px 100%;
+    }
+
+    .child {
+      position: absolute;
+      left: 50%;
+      bottom: 26%;
+      z-index: 4;
+      width: 86px;
+      height: 150px;
+      transform: translateX(-50%);
+      opacity: .74;
+    }
+
+    .child::before {
+      content: "";
+      position: absolute;
+      left: 25px;
+      top: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,246,222,.9);
+      box-shadow: 0 0 24px rgba(255,232,164,.2);
+    }
+
+    .child::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 38px;
+      width: 58px;
+      height: 82px;
+      border-radius: 34px 34px 16px 16px;
+      background: linear-gradient(180deg, #d9a85f, #7ea1aa);
+    }
+
+    .puddle {
+      position: absolute;
+      z-index: 5;
+      width: 92px;
+      height: 38px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(91, 132, 151, .82), rgba(31, 45, 55, .58));
+      box-shadow: inset 0 5px 18px rgba(255,255,255,.13), 0 12px 28px rgba(0,0,0,.18);
+      cursor: pointer;
+      transition: transform .45s ease, background .45s ease, opacity .45s ease;
+    }
+
+    .puddle.on {
+      transform: scale(1.08);
+      background: radial-gradient(ellipse at center, rgba(255,232,154,.9), rgba(122, 181, 196, .55));
+    }
+
+    .flower {
+      position: absolute;
+      z-index: 4;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #f3d16e;
+      opacity: 0;
+      transform: translateY(12px) scale(.7);
+      transition: opacity .5s ease, transform .5s ease;
+      box-shadow: 14px -4px 0 #f7ead0, -12px -3px 0 #e8a96e;
+    }
+
+    .flower.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .wall-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+    }
+
+    .wall {
+      position: absolute;
+      left: 50%;
+      top: 26%;
+      width: min(78vw, 380px);
+      height: 44%;
+      transform: translateX(-50%);
+      border-radius: 5px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,.2) 1px, transparent 1px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 31px),
+        linear-gradient(145deg, rgba(112, 92, 76, .96), rgba(54, 63, 68, .94));
+      background-size: 54px 32px, 100% 32px, 100% 100%, 100% 100%;
+      box-shadow: inset 0 0 38px rgba(0,0,0,.28), 0 22px 60px rgba(0,0,0,.35);
+      overflow: hidden;
+      transition: opacity .55s ease, transform .7s ease;
+    }
+
+    .wall::before,
+    .wall::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      background: rgba(255, 219, 132, .22);
+      filter: blur(1px);
+      clip-path: polygon(46% 0, 52% 20%, 48% 40%, 56% 62%, 50% 100%, 44% 64%, 48% 42%, 42% 18%);
+      pointer-events: none;
+    }
+
+    .wall::before {
+      left: 42%;
+      top: 0;
+      width: 46px;
+      height: 100%;
+      opacity: .75;
+    }
+
+    .wall::after {
+      left: 28%;
+      top: 18%;
+      width: 38px;
+      height: 58%;
+      opacity: .36;
+      transform: rotate(-16deg);
+    }
+
+    .wall.open {
+      opacity: .08;
+      transform: translateX(-50%) scaleX(.72);
+      pointer-events: none;
+    }
+
+    .wall canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      z-index: 3;
+    }
+
+    .wall-text {
+      position: absolute;
+      top: 46%;
+      width: 112px;
+      color: rgba(255,255,255,.62);
+      font-size: 14px;
+      line-height: 1.7;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .wall-text.left { left: 8%; }
+    .wall-text.right { right: 8%; }
+
+    .warm-behind {
+      position: absolute;
+      left: 50%;
+      top: 24%;
+      width: min(66vw, 320px);
+      height: 42%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,215,128,.5), transparent 68%);
+      filter: blur(10px);
+      opacity: .45;
+    }
+
+    .reach-stage {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .reach-hand {
+      position: absolute;
+      top: 42%;
+      width: 42%;
+      height: 86px;
+      border-radius: 46px 62px 42px 48px;
+      background: linear-gradient(180deg, #f0d0a0, #af7660);
+      box-shadow: 0 20px 44px rgba(0,0,0,.24);
+      transition: transform .8s cubic-bezier(.2, .78, .16, 1);
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .reach-hand.left {
+      left: -22%;
+      transform: rotate(5deg);
+    }
+
+    .reach-hand.right {
+      right: -22%;
+      transform: rotate(-5deg);
+    }
+
+    .reach-hand::before {
+      content: "";
+      position: absolute;
+      top: -22px;
+      width: 82px;
+      height: 72px;
+      border-radius: 46% 54% 48% 52%;
+      background: linear-gradient(180deg, #f3d5a7, #bd8268);
+      box-shadow: inset -8px -8px 0 rgba(128, 78, 65, .16);
+    }
+
+    .reach-hand.left::before { right: -36px; }
+    .reach-hand.right::before { left: -36px; transform: scaleX(-1); }
+
+    .reach-hand::after {
+      content: "";
+      position: absolute;
+      top: -28px;
+      width: 52px;
+      height: 22px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f6dbb3, #c58a70);
+      box-shadow:
+        0 18px 0 rgba(238, 196, 158, .92),
+        0 36px 0 rgba(230, 184, 145, .86);
+    }
+
+    .reach-hand.left::after { right: -22px; transform: rotate(-12deg); }
+    .reach-hand.right::after { left: -22px; transform: scaleX(-1) rotate(-12deg); }
+
+    .reach-stage.join .reach-hand.left {
+      transform: translateX(34%) rotate(7deg);
+    }
+
+    .reach-stage.join .reach-hand.right {
+      transform: translateX(-34%) rotate(-7deg);
+    }
+
+    .quiet-path {
+      position: absolute;
+      left: 50%;
+      top: 58%;
+      width: min(72vw, 320px);
+      height: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, rgba(255,235,174,.85), transparent);
+      box-shadow: 0 0 32px rgba(255,220,135,.45);
+      opacity: .35;
+    }
+
+    .hutong {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, transparent 0 48%, rgba(118, 86, 67, .16) 49% 100%),
+        linear-gradient(150deg, rgba(255,255,255,.08), transparent 45%);
+    }
+
+    .roof {
+      position: absolute;
+      left: 6%;
+      top: 30%;
+      width: 88%;
+      height: 90px;
+      clip-path: polygon(0 62%, 50% 0, 100% 62%, 100% 88%, 0 88%);
+      background: linear-gradient(180deg, #755449, #3e3130);
+      opacity: .9;
+    }
+
+    .bricks {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 43%;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(180deg, #985949, #6a3e3b);
+      background-size: 54px 36px, 100% 36px, 100% 100%;
+    }
+
+    .home-light {
+      position: absolute;
+      left: 14%;
+      bottom: 32%;
+      width: 58px;
+      height: 76px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, rgba(255,221,126,.92), rgba(238,158,65,.74));
+      box-shadow: 0 0 40px rgba(255,190,80,.45);
+    }
+
+    .sun-token {
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      bottom: 18%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      width: min(88vw, 360px);
+    }
+
+    .sun-token button {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      color: rgba(255,255,255,.88);
+      background: rgba(18, 24, 30, .28);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+
+    .sun-token button.chosen {
+      color: #4a3522;
+      background: rgba(255,234,162,.9);
+      box-shadow: 0 0 30px rgba(255,215,120,.35);
+    }
+
+    .fact-grid {
+      position: relative;
+      z-index: 6;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: min(100%, 430px);
+      margin: 12px auto 0;
+    }
+
+    .fact-card {
+      min-height: 82px;
+      padding: 14px 12px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      color: rgba(255,255,255,.82);
+      background: rgba(12, 18, 24, .32);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 16px 34px rgba(0,0,0,.18);
+      text-align: left;
+      cursor: pointer;
+      transition: transform .35s ease, background .35s ease, border-color .35s ease;
+    }
+
+    .fact-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #fff4d0;
+      font-size: 16px;
+    }
+
+    .fact-card span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .fact-card.on {
+      transform: translateY(-4px);
+      border-color: rgba(255,224,144,.52);
+      background: rgba(255, 225, 150, .16);
+    }
+
+    .source-note {
+      position: relative;
+      z-index: 6;
+      width: min(100%, 430px);
+      margin: 10px auto 0;
+      color: rgba(255,255,255,.52);
+      font-size: 11px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .scene.info-completed .fact-grid {
+      opacity: .12;
+      transform: translateY(18px) scale(.94);
+      pointer-events: none;
+      transition: opacity .45s ease, transform .45s ease;
+    }
+
+    #factDone,
+    #harmDone,
+    #effortDone,
+    #chinaDone {
+      bottom: calc(12% + var(--safe-bottom));
+      left: 28px;
+      right: 78px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      background: rgba(9, 13, 18, .34);
+      backdrop-filter: blur(14px);
+      font-size: 16px;
+      box-shadow: 0 16px 34px rgba(0,0,0,.18);
+    }
+
+    .info-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(6, 10, 14, .62);
+      backdrop-filter: blur(12px);
+    }
+
+    .info-modal.show {
+      display: flex;
+    }
+
+    .info-dialog {
+      width: min(100%, 390px);
+      max-height: 72dvh;
+      overflow: auto;
+      padding: 22px 20px 18px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      color: #f8f1df;
+      background:
+        radial-gradient(circle at 84% 14%, rgba(232, 184, 96, .22), transparent 28%),
+        linear-gradient(160deg, rgba(37, 47, 54, .96), rgba(18, 24, 31, .96));
+      box-shadow: 0 28px 80px rgba(0,0,0,.38);
+    }
+
+    .info-dialog h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.28;
+      letter-spacing: 0;
+    }
+
+    .info-dialog p {
+      margin: 14px 0 0;
+      color: rgba(255,255,255,.82);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .info-source {
+      display: block;
+      margin-top: 14px;
+      color: rgba(255,255,255,.52);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .info-close {
+      margin-top: 18px;
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-radius: 999px;
+      color: #283034;
+      background: linear-gradient(135deg, #fff5d8, #e7b95e);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .kite {
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      z-index: 5;
+      width: 76px;
+      height: 76px;
+      transform: translate(-50%, -50%) rotate(45deg);
+      background: linear-gradient(135deg, #f2cf72 0 49%, #7ba7b3 50% 100%);
+      border: 2px solid rgba(255,255,255,.66);
+      cursor: grab;
+      touch-action: none;
+      box-shadow: 0 14px 32px rgba(0,0,0,.22);
+    }
+
+    .kite::after {
+      content: "";
+      position: absolute;
+      left: 35px;
+      top: 72px;
+      width: 2px;
+      height: 230px;
+      background: rgba(255,255,255,.42);
+      transform: rotate(-45deg);
+      transform-origin: top;
+    }
+
+    .sky-warm {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,225,142,.26), rgba(255,240,202,.38));
+      opacity: 0;
+      transition: opacity .7s ease;
+      pointer-events: none;
+    }
+
+    .sky-warm.show { opacity: 1; }
+
+    .route-map {
+      position: absolute;
+      left: 50%;
+      bottom: 13%;
+      z-index: 3;
+      width: min(82vw, 360px);
+      height: 45%;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 82% 72%, rgba(255, 210, 104, .22), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      box-shadow: inset 0 0 42px rgba(255,255,255,.05), 0 20px 48px rgba(0,0,0,.18);
+      overflow: hidden;
+    }
+
+    .route-map svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .route-path {
+      fill: none;
+      stroke: rgba(255,244,202,.7);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 7 10;
+      filter: drop-shadow(0 0 10px rgba(255,221,122,.35));
+    }
+
+    .route-home {
+      position: absolute;
+      right: 22px;
+      bottom: 30px;
+      width: 72px;
+      height: 62px;
+      border-radius: 5px;
+      background: linear-gradient(180deg, #ffe7a8, #bd7856);
+      box-shadow: 0 0 36px rgba(255,207,100,.42);
+    }
+
+    .route-home::before {
+      content: "";
+      position: absolute;
+      left: -5px;
+      top: -25px;
+      width: 82px;
+      height: 42px;
+      clip-path: polygon(50% 0, 100% 78%, 0 78%);
+      background: #71473d;
+    }
+
+    .route-label {
+      position: absolute;
+      left: 18px;
+      bottom: 24px;
+      color: rgba(255,255,255,.74);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .map-kite {
+      left: 16%;
+      top: 58%;
+      transform: rotate(45deg);
+    }
+
+    .balance-stage {
+      position: absolute;
+      left: 50%;
+      bottom: 15%;
+      z-index: 3;
+      width: min(82vw, 360px);
+      height: 43%;
+      transform: translateX(-50%);
+    }
+
+    .balance-line {
+      position: absolute;
+      left: 50%;
+      top: 36%;
+      width: 76%;
+      height: 4px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(56,37,31,.65), rgba(255,231,159,.85), rgba(56,37,31,.65));
+      transition: transform .55s ease;
+    }
+
+    .balance-stage.tilt-left .balance-line { transform: translateX(-50%) rotate(-9deg); }
+    .balance-stage.tilt-right .balance-line { transform: translateX(-50%) rotate(9deg); }
+
+    .balance-pillar {
+      position: absolute;
+      left: 50%;
+      top: 36%;
+      width: 4px;
+      height: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,232,163,.52);
+    }
+
+    .scale-pan {
+      position: absolute;
+      top: 44%;
+      width: 104px;
+      height: 78px;
+      border-radius: 0 0 999px 999px;
+      border: 2px solid rgba(255,232,163,.42);
+      background: rgba(18,24,29,.24);
+      backdrop-filter: blur(10px);
+      display: grid;
+      place-items: center;
+      color: rgba(255,255,255,.82);
+      font-size: 16px;
+    }
+
+    .scale-pan.left { left: 4%; }
+    .scale-pan.right { right: 4%; }
+
+    .sun-choice {
+      position: absolute;
+      left: 50%;
+      top: 4%;
+      z-index: 5;
+      width: 106px;
+      height: 106px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255,242,184,.42);
+      border-radius: 50%;
+      color: #5c3e1e;
+      background: radial-gradient(circle, #fff5bf 0 28%, #f4bb55 58%, rgba(244,187,85,.3) 72%, transparent 73%);
+      box-shadow: 0 0 54px rgba(255,211,104,.46);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .sun-choice.on {
+      animation: sunPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes sunPulse {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.08); }
+    }
+
+    .palm {
+      position: absolute;
+      left: 50%;
+      bottom: 10%;
+      width: min(86vw, 430px);
+      height: 43%;
+      transform: translateX(-50%);
+      opacity: .96;
+    }
+
+    .palm-scene .copy {
+      margin-top: 38px;
+      max-width: min(310px, calc(100vw - 98px));
+    }
+
+    .palm-scene h2 {
+      font-size: clamp(30px, 8.4vw, 42px);
+      line-height: 1.12;
+    }
+
+    .palm-scene p {
+      max-width: 290px;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .hand {
+      position: absolute;
+      bottom: 0;
+      width: 45%;
+      height: 72%;
+      background: linear-gradient(180deg, #f0d4a5, #b87f62);
+      filter: drop-shadow(0 18px 35px rgba(0,0,0,.22));
+    }
+
+    .hand.left {
+      left: 4%;
+      border-radius: 70px 28px 36px 100px;
+      transform: rotate(12deg);
+    }
+
+    .hand.right {
+      right: 4%;
+      border-radius: 28px 70px 100px 36px;
+      transform: rotate(-12deg);
+    }
+
+    .light-word {
+      position: absolute;
+      z-index: 6;
+      min-width: 62px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #fff8dc;
+      background: rgba(255, 215, 120, .22);
+      border: 1px solid rgba(255, 241, 190, .32);
+      box-shadow: 0 0 26px rgba(255,207,102,.32);
+      cursor: pointer;
+      transition: transform .4s ease, background .4s ease, opacity .4s ease;
+    }
+
+    .palm-scene .light-word {
+      min-width: 58px;
+      height: 34px;
+      font-size: 14px;
+      box-shadow: 0 0 22px rgba(255,207,102,.24);
+    }
+
+    .light-word::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffe090;
+      box-shadow: 0 0 18px #ffe090;
+    }
+
+    .light-word.on {
+      background: rgba(255, 239, 188, .9);
+      color: #59402c;
+      transform: scale(1.08);
+    }
+
+    .light-word.on::before { content: none; }
+
+    .lyrics-line {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: 28%;
+      z-index: 6;
+      color: rgba(255,255,255,.82);
+      font-size: 17px;
+      line-height: 1.8;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+
+    .lyrics-line.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .video-box {
+      position: relative;
+      z-index: 5;
+      width: min(100%, 440px);
+      margin: 0 auto;
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 18px;
+      transform: translateY(-5%);
+    }
+
+    .video-note {
+      position: relative;
+      z-index: 5;
+      width: min(100%, 430px);
+      margin: -10px auto 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 8px;
+      color: rgba(255,255,255,.7);
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(12px);
+      font-size: 13px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    video {
+      width: 100%;
+      max-height: 68dvh;
+      border-radius: 8px;
+      background: #050608;
+      box-shadow: 0 24px 70px rgba(0,0,0,.5);
+    }
+
+    .video-ended {
+      display: none;
+    }
+
+    .video-ended.show {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .wish-panel {
+      position: relative;
+      z-index: 6;
+      width: min(100%, 430px);
+      margin: 0 auto;
+      padding-bottom: 8px;
+    }
+
+    .wish-input {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid rgba(43, 51, 54, .18);
+      border-radius: 8px;
+      padding: 0 14px;
+      color: #25292b;
+      background: rgba(255,255,255,.78);
+      outline: none;
+      box-shadow: 0 14px 36px rgba(105,74,42,.14);
+    }
+
+    .quick-wishes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 14px;
+    }
+
+    .quick-wishes button {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(43, 51, 54, .16);
+      border-radius: 999px;
+      color: #33414a;
+      background: rgba(255,255,255,.5);
+      cursor: pointer;
+    }
+
+    .card {
+      display: none;
+      margin-top: 14px;
+      color: #53391f;
+    }
+
+    .card.show { display: block; }
+
+    .lantern-card {
+      position: relative;
+      min-height: 340px;
+      padding: 38px 24px 26px;
+      text-align: center;
+      border-radius: 50% 50% 22px 22px / 18% 18% 22px 22px;
+      background:
+        linear-gradient(90deg, transparent 0 18%, rgba(134,87,38,.14) 18% 19%, transparent 19% 49%, rgba(134,87,38,.13) 49% 50%, transparent 50% 81%, rgba(134,87,38,.14) 81% 82%, transparent 82%),
+        radial-gradient(circle at 50% 90%, rgba(255,169,56,.5), transparent 24%),
+        linear-gradient(180deg, rgba(255,248,217,.96), rgba(244,180,82,.9));
+      box-shadow:
+        0 0 46px rgba(255,190,91,.58),
+        0 22px 60px rgba(100,69,28,.25),
+        inset 0 0 36px rgba(255,255,255,.42);
+      overflow: hidden;
+      animation: lanternFloat 4.8s ease-in-out infinite;
+    }
+
+    .lantern-card h3 {
+      position: relative;
+      z-index: 2;
+    }
+
+    .lantern-card::before,
+    .lantern-card::after {
+      content: "";
+      position: absolute;
+      top: 18px;
+      bottom: 28px;
+      width: 1px;
+      background: rgba(126,78,28,.18);
+    }
+
+    .lantern-card::before { left: 28%; }
+    .lantern-card::after { right: 28%; }
+
+    .lantern-flame {
+      position: absolute;
+      left: 50%;
+      bottom: 17px;
+      width: 38px;
+      height: 46px;
+      transform: translateX(-50%);
+      border-radius: 50% 50% 45% 45%;
+      background: radial-gradient(circle at 50% 62%, #fff7c6, #f6a33c 58%, transparent 64%);
+      filter: blur(.2px);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .card .wish-text {
+      min-height: 58px;
+      margin: 18px 0;
+      color: #3a4246;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .card small {
+      color: rgba(38,48,56,.62);
+    }
+
+    .qr-box {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+      color: rgba(83,57,31,.68);
+      font-size: 12px;
+    }
+
+    .save-card-btn {
+      display: none;
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .card.show + .save-card-btn,
+    .save-card-btn.show {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #qrCanvas {
+      width: 76px;
+      height: 76px;
+      padding: 6px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.82);
+    }
+
+    .share-link {
+      word-break: break-all;
+      max-width: 170px;
+      text-align: left;
+    }
+
+    @keyframes lanternFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .swipe-tip {
+      position: absolute;
+      left: 50%;
+      bottom: calc(14px + var(--safe-bottom));
+      z-index: 12;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,.56);
+      font-size: 12px;
+      opacity: .9;
+      pointer-events: none;
+    }
+
+    @keyframes curtain {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(8px); }
+    }
+
+    @keyframes idleWing {
+      0%, 100% { transform: rotate(-7deg); }
+      45% { transform: rotate(8deg); }
+    }
+
+    @keyframes steam {
+      0% { transform: translateY(8px) translateX(0); opacity: 0; }
+      35% { opacity: .8; }
+      100% { transform: translateY(-18px) translateX(10px); opacity: 0; }
+    }
+
+    @keyframes finalFly {
+      0%, 100% { transform: translate(0, 0) scale(.78); }
+      50% { transform: translate(26px, -18px) scale(.82); }
+    }
+
+    @media (max-height: 650px) {
+      .copy { margin-top: 38px; }
+      p { font-size: 15px; line-height: 1.65; }
+      .scene { padding-left: 20px; padding-right: 20px; }
+      .table { bottom: 10%; }
+      .palm { height: 37%; }
+      video { max-height: 58dvh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <audio id="bgm" src="./白鸽落在窗台.mp3" preload="auto" loop></audio>
+
+    <div class="topbar">
+      <div class="progress" id="progress"></div>
+      <button class="audio-toggle" id="audioToggle" aria-label="音乐开关">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 18V5l12-2v13" />
+          <circle cx="6" cy="18" r="3" />
+          <circle cx="18" cy="16" r="3" />
+        </svg>
+      </button>
+    </div>
+
+    <aside class="lyric-rail" aria-label="歌词同步">
+      <div class="lyric-track" id="lyricTrack"></div>
+    </aside>
+
+    <main class="slides" id="slides">
+      <section class="scene cover-scene" data-music="0">
+        <div class="art-card sticker-a"><img src="./assets/bg-window.png" alt="" /></div>
+        <div class="window"></div>
+        <div class="curtain left"></div>
+        <div class="curtain right"></div>
+        <div class="sill"></div>
+        <div class="dove home" id="startDove" role="button" aria-label="开始">
+          <span class="wing"></span><span class="eye"></span><span class="beak"></span>
+        </div>
+        <div class="copy">
+          <p class="eyebrow">反战互动 H5</p>
+          <h1>让明天<br>更安静</h1>
+          <p>当世界太吵，<br>先听见一只白鸽落下的声音。</p>
+        </div>
+        <div class="bottom-action">
+          <button class="primary-btn" id="startBtn">轻触白鸽开始</button>
+          <span class="hint">开启后将播放背景歌曲</span>
+        </div>
+      </section>
+
+      <section class="scene tea-scene" data-music="14">
+        <div class="art-card sticker-a"><img src="./assets/sticker-war-table.png" alt="" /></div>
+        <div class="ledger-board" id="ledgerBoard">
+          <div class="ledger-cost">平民伤亡<br>流离失所<br>城市破碎</div>
+        </div>
+        <button class="interest-chip" data-interest style="left:12%; top:33%;">资源</button>
+        <button class="interest-chip" data-interest style="right:13%; top:34%;">疆界</button>
+        <button class="interest-chip" data-interest style="left:18%; top:55%;">权力</button>
+        <button class="interest-chip" data-interest style="right:16%; top:57%;">军火</button>
+        <div class="complete-line" id="teaDone">利益被写进账本，<br>代价却落在普通人身上。</div>
+        <div class="copy">
+          <p class="eyebrow">利益的账本</p>
+          <h2>战争常被利益<br>推向普通人</h2>
+          <p>资源、疆界、权力、军火，会把人的生活写成代价。</p>
+        </div>
+        <div class="bottom-action">
+          <span class="hint">点开利益标签，看见被遮住的代价</span>
+        </div>
+      </section>
+
+      <section class="scene rain-scene" data-music="30">
+        <div class="art-card alley"><img src="./assets/bg-alley.png" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets/sticker-puddle.png" alt="" /></div>
+        <div class="rain-lane"></div>
+        <div class="child"></div>
+        <button class="puddle" data-puddle style="left:14%; bottom:22%;"></button>
+        <button class="puddle" data-puddle style="left:54%; bottom:27%;"></button>
+        <button class="puddle" data-puddle style="left:32%; bottom:15%;"></button>
+        <span class="flower" data-flower style="left:24%; bottom:32%;"></span>
+        <span class="flower" data-flower style="left:66%; bottom:37%;"></span>
+        <span class="flower" data-flower style="left:48%; bottom:24%;"></span>
+        <div class="complete-line" id="puddleDone">孩子的笑声，<br>本该落在雨后的街巷。</div>
+        <div class="copy">
+          <p class="eyebrow">雨后的花</p>
+          <h2>窗外孩子在笑<br>像雨后的花</h2>
+          <p>反战不是遥远的姿态，是守住每一个普通清晨。</p>
+        </div>
+        <div class="bottom-action">
+          <span class="hint">轻触水洼，让阴云变成蓝天</span>
+        </div>
+      </section>
+
+      <section class="scene wall-scene" data-music="48">
+        <div class="art-card sticker-a"><img src="./assets/sticker-wall.png" alt="" /></div>
+        <div class="warm-behind"></div>
+        <div class="wall-text left">我只是<br>害怕</div>
+        <div class="wall-text right">我也想<br>回家</div>
+        <div class="wall" id="wall"><canvas id="wallCanvas"></canvas></div>
+        <div class="dove wall-dove"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
+        <div class="complete-line" id="wallDone">不是所有靠近，<br>都需要先分出输赢。</div>
+        <div class="copy">
+          <p class="eyebrow">沉默之墙</p>
+          <h2>别再让沉默<br>把心隔成墙</h2>
+          <p>把手伸过来，让争吵退场。</p>
+        </div>
+        <div class="bottom-action">
+          <span class="hint">用手指擦开这堵墙</span>
+        </div>
+      </section>
+
+      <section class="scene reach-scene" data-music="58">
+        <div class="art-card sticker-b"><img src="./assets/sticker-wall.png" alt="" /></div>
+        <div class="reach-stage" id="reachStage">
+          <div class="quiet-path"></div>
+          <div class="reach-hand left"></div>
+          <div class="reach-hand right"></div>
+        </div>
+        <div class="complete-line" id="reachDone">靠近不是认输，<br>是让争吵先退场。</div>
+        <div class="copy">
+          <p class="eyebrow">把手伸过来</p>
+          <h2>把手伸过来<br>让争吵退场</h2>
+          <p>和平有时不是一句口号，而是先向彼此走近一步。</p>
+        </div>
+        <div class="bottom-action">
+          <button class="primary-btn" id="reachBtn">让手靠近</button>
+          <span class="hint">拖动任意一只手，让它们在光里靠近</span>
+        </div>
+      </section>
+
+      <section class="scene kite-scene" data-music="98">
+        <div class="art-card alley"><img src="./assets/bg-alley.png" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets/sticker-dove-kite.png" alt="" /></div>
+        <div class="route-map">
+          <svg viewBox="0 0 320 260" aria-hidden="true">
+            <path class="route-path" d="M34 204 C84 170, 86 116, 146 126 S224 122, 274 56" />
+          </svg>
+          <div class="route-home"></div>
+          <div class="route-label">从风里出发<br>朝灯火回家</div>
+        </div>
+        <div class="sky-warm" id="skyWarm"></div>
+        <div class="kite map-kite" id="kite" aria-label="风筝"></div>
+        <div class="complete-line" id="kiteDone">愿每一条回家的路，<br>都不再被硝烟挡住。</div>
+        <div class="copy">
+          <p class="eyebrow">谁都想回家</p>
+          <h2>谁都不是对手<br>谁都想回家</h2>
+          <p>战争里，最普通的愿望，往往最难抵达。</p>
+        </div>
+        <div class="bottom-action">
+          <span class="hint">拖动风筝，让它飞过屋檐</span>
+        </div>
+      </section>
+
+      <section class="scene dove-scene" data-music="116">
+        <div class="art-card sticker-a"><img src="./assets/sticker-dove-kite.png" alt="" /></div>
+        <div class="balance-stage" id="balanceStage">
+          <div class="balance-line"></div>
+          <div class="balance-pillar"></div>
+          <div class="scale-pan left">谁赢了</div>
+          <div class="scale-pan right">谁输了</div>
+          <button class="sun-choice" id="sunBtn">阳光</button>
+        </div>
+        <div class="sky-warm" id="doveWarm"></div>
+        <div class="dove brick-dove" style="top:52%;"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
+        <div class="complete-line" id="sunDone">它不问谁赢了，<br>只想有阳光。</div>
+        <div class="copy">
+          <p class="eyebrow">红砖墙上的白鸽</p>
+          <h2>它不问谁赢了<br>只想有阳光</h2>
+          <p>当胜负被放下，生活才重新露出一点光。</p>
+        </div>
+      </section>
+
+      <section class="scene war-list-scene" data-music="132">
+        <div class="warm-behind"></div>
+        <div class="art-card war"><img src="./assets/bg-war-wounds.png" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets/real-ukraine-refugees.jpg" alt="" /></div>
+        <div class="copy">
+          <p class="eyebrow">近年的战争与冲突</p>
+          <h2>世界仍有许多地方<br>没有等来安静</h2>
+          <p>这些名字，背后不是地图上的区域，而是无数普通人的生活。</p>
+        </div>
+        <div class="fact-grid">
+          <button class="fact-card" data-fact data-title="俄乌战争" data-detail="自 2022 年 2 月冲突全面升级以来，联合国难民署持续记录到数百万人离开乌克兰，另有大量人口在乌克兰境内流离失所。战争也造成平民伤亡、基础设施破坏和长期的人道需求。" data-source="参考：UNHCR Ukraine Emergency、OHCHR 平民伤亡监测。">
+            <strong>俄乌战争</strong>
+            <span>大量家庭离散，城市和学校长期受损。</span>
+          </button>
+          <button class="fact-card" data-fact data-title="巴以 / 加沙" data-detail="加沙冲突造成大量平民伤亡和流离失所。联合国人道机构多次警告，食物、水、医疗和避难条件持续恶化，儿童、伤病者和老人承受最沉重的代价。" data-source="参考：OCHA occupied Palestinian territory、UNICEF Gaza response。">
+            <strong>巴以 / 加沙</strong>
+            <span>伤亡、饥饿与流离失所持续撕开日常。</span>
+          </button>
+          <button class="fact-card" data-fact data-title="伊朗、以色列与美国相关冲突" data-detail="近年中东地区多次出现袭击、报复和军事介入，伊朗、以色列与美国相关行动加剧外溢风险。联合国多次呼吁各方保持克制，避免地区局势滑向更大规模冲突。" data-source="参考：联合国秘书长声明、联合国新闻关于中东局势升级报道。">
+            <strong>伊朗、以色列与美国</strong>
+            <span>袭击与报复让地区局势逼近更大风险。</span>
+          </button>
+          <button class="fact-card" data-fact data-title="苏丹与也门" data-detail="苏丹冲突造成全球最严重的流离失所危机之一，数以百万计的人被迫离开家园；也门多年冲突让大量人口依赖人道援助，粮食、医疗和儿童保护需求长期存在。" data-source="参考：UNHCR Sudan Emergency、UNICEF Yemen Crisis、OCHA Yemen。">
+            <strong>苏丹与也门</strong>
+            <span>长期冲突让饥饿、疾病和离散扩散。</span>
+          </button>
+        </div>
+        <div class="source-note">资料参考：UNHCR、OCHA、OHCHR、UNICEF、联合国新闻等公开信息。</div>
+        <div class="complete-line" id="factDone">战争从来不是远方的名词，<br>它会落到每一扇窗后。</div>
+        <div class="bottom-action">
+          <span class="hint">轻触卡片，了解这些冲突</span>
+        </div>
+      </section>
+
+      <section class="scene harm-scene" data-music="146">
+        <div class="art-card sticker-a"><img src="./assets/real-gaza-aid.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets/sticker-war-table.png" alt="" /></div>
+        <div class="warm-behind"></div>
+        <div class="copy">
+          <p class="eyebrow">战争造成的伤害</p>
+          <h2>伤害不止是数字<br>也是被打断的日常</h2>
+          <p>战争会把生活拆成很多碎片，然后让人用很久很久去拾回。</p>
+        </div>
+        <div class="fact-grid">
+          <button class="fact-card" data-harm data-title="离散" data-detail="战争最直接的后果之一，是人们离开家。有人跨过国境成为难民，有人在自己的国家内不断迁移；他们带走的往往只有证件、钥匙、药和孩子的书包。" data-source="参考：UNHCR 全球难民与流离失所者统计。">
+            <strong>离散</strong>
+            <span>熟悉的街道变成回不去的地方。</span>
+          </button>
+          <button class="fact-card" data-harm data-title="饥饿" data-detail="冲突会切断供应链，破坏农田、市场、供水和医疗系统。联合国机构常把粮食不安全、营养不良和疾病暴发列为战争地区最紧迫的人道风险。" data-source="参考：OCHA、WFP、UNICEF 人道局势报告。">
+            <strong>饥饿</strong>
+            <span>食物、饮水和医疗先被战争切断。</span>
+          </button>
+          <button class="fact-card" data-harm data-title="失学" data-detail="学校可能被毁、被迫关闭，或成为避难所。儿童在长期停课、迁徙和恐惧中失去稳定成长环境，教育中断会影响他们许多年。" data-source="参考：UNICEF 关于冲突地区儿童教育与保护资料。">
+            <strong>失学</strong>
+            <span>孩子在警报声中长大，童年被迫让位。</span>
+          </button>
+          <button class="fact-card" data-harm data-title="创伤" data-detail="战争结束并不意味着伤害立即结束。失去亲人、目睹暴力、长期逃难和生活不确定，会带来持续的心理创伤，尤其影响儿童和幸存者家庭。" data-source="参考：WHO、UNICEF 关于冲突与心理健康资料。">
+            <strong>创伤</strong>
+            <span>恐惧和失去会在停火后仍停留很久。</span>
+          </button>
+        </div>
+        <div class="complete-line" id="harmDone">每一种伤害背后，<br>都是一个想回家的人。</div>
+        <div class="bottom-action">
+          <span class="hint">点亮四种战争留下的伤</span>
+        </div>
+      </section>
+
+      <section class="scene world-scene" data-music="162">
+        <div class="art-card sticker-a"><img src="./assets/real-aid-box.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets/sticker-aid.png" alt="" /></div>
+        <div class="warm-behind"></div>
+        <div class="copy">
+          <p class="eyebrow">世界为了和平做了什么</p>
+          <h2>和平不是自然发生<br>它需要被维护</h2>
+          <p>在炮火之外，也有人一直在为停火、救援和重建奔走。</p>
+        </div>
+        <div class="fact-grid efforts-grid">
+          <button class="fact-card effort-card" data-effort data-title="联合国斡旋" data-detail="联合国通过秘书长斡旋、特使机制、安理会决议和人道协调，推动停火、人员撤离、人道准入和政治谈判。斡旋往往缓慢，但它给冲突双方留下对话通道。" data-source="参考：United Nations Peacemaking、UN Security Council。">
+            <strong>联合国斡旋</strong>
+            <span>为停火、人道通道和谈判留下入口。</span>
+          </button>
+          <button class="fact-card effort-card" data-effort data-title="人道救援" data-detail="OCHA、UNICEF、WFP、WHO、UNHCR 等机构和合作伙伴在冲突地区提供粮食、饮水、医疗、营养、避难、教育和儿童保护，让生命先从危险中被托住。" data-source="参考：OCHA、UNICEF、WFP、WHO、UNHCR。">
+            <strong>人道救援</strong>
+            <span>先把粮食、医疗和避难送到人身边。</span>
+          </button>
+          <button class="fact-card effort-card" data-effort data-title="维和与重建" data-detail="联合国维和行动、排雷、难民安置、社区修复和战后重建，帮助冲突地区恢复基本安全。和平不是一纸协议，而是路能走、学能上、家能回。" data-source="参考：UN Peacekeeping、UNDP crisis response。">
+            <strong>维和与重建</strong>
+            <span>让停火之后的生活重新变得可持续。</span>
+          </button>
+          <button class="fact-card effort-card" data-effort data-title="民间行动" data-detail="医生、记者、志愿者、教育者、当地社区组织和普通捐助者，也在战争中维护人的尊严。他们记录真相、治疗伤者、保护孩子、维系学校和社区。" data-source="参考：国际人道组织公开行动资料。">
+            <strong>民间行动</strong>
+            <span>普通人也在以自己的方式守住尊严。</span>
+          </button>
+        </div>
+        <div class="complete-line" id="effortDone">和平不是自然发生，<br>它需要一次次被选择。</div>
+        <div class="bottom-action">
+          <span class="hint">点亮这些和平努力</span>
+        </div>
+      </section>
+
+      <section class="scene china-scene" data-music="176">
+        <div class="art-card sticker-a"><img src="./assets/sticker-china-press.png" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets/sticker-china-peacekeeping.png" alt="" /></div>
+        <div class="warm-behind"></div>
+        <div class="copy">
+          <p class="eyebrow">中国的和平贡献</p>
+          <h2>把劝和促谈<br>放在冲突之前</h2>
+          <p>中国长期主张通过对话协商解决争端，也参与联合国维和与人道援助。</p>
+        </div>
+        <div class="fact-grid efforts-grid">
+          <button class="fact-card china-card" data-china data-title="劝和促谈" data-detail="中国在乌克兰危机、巴以问题等热点议题上多次呼吁停火止战、通过对话协商解决争端，强调政治解决和避免冲突扩大。" data-source="参考：中国外交部关于政治解决乌克兰危机、巴以问题立场文件与例行记者会。">
+            <strong>劝和促谈</strong>
+            <span>呼吁停火止战，通过对话解决争端。</span>
+          </button>
+          <button class="fact-card china-card" data-china data-title="联合国维和" data-detail="中国是联合国维和行动的重要参与方之一，长期派出维和人员参与任务，包括工程、医疗、运输、安全等支持，为冲突地区稳定与重建贡献力量。" data-source="参考：中国国防部、中国常驻联合国代表团、UN Peacekeeping。">
+            <strong>联合国维和</strong>
+            <span>派出人员参与维和，支持安全与重建。</span>
+          </button>
+          <button class="fact-card china-card" data-china data-title="人道援助" data-detail="中国向部分受冲突和灾害影响地区提供粮食、医疗、物资和紧急援助，也通过多边和双边渠道支持人道救援。" data-source="参考：中国外交部、中国国际发展合作署公开信息。">
+            <strong>人道援助</strong>
+            <span>提供粮食、医疗和物资等人道支持。</span>
+          </button>
+          <button class="fact-card china-card" data-china data-title="全球安全倡议" data-detail="全球安全倡议倡导共同、综合、合作、可持续的安全观，强调尊重各国主权和领土完整，通过对话协商解决分歧与争端。" data-source="参考：中国外交部《全球安全倡议概念文件》。">
+            <strong>全球安全倡议</strong>
+            <span>倡导共同、综合、合作、可持续的安全观。</span>
+          </button>
+        </div>
+        <div class="complete-line" id="chinaDone">和平需要世界同行，<br>也需要每一个国家承担责任。</div>
+        <div class="bottom-action">
+          <span class="hint">点亮中国的和平行动</span>
+        </div>
+      </section>
+
+      <section class="scene is-warm palm-scene" data-music="205">
+        <div class="art-card sticker-a"><img src="./assets/sticker-dove-kite.png" alt="" /></div>
+        <div class="lyrics-line" id="lyricsLine">和平，和平，落在你我掌心</div>
+        <div class="palm">
+          <span class="hand left"></span>
+          <span class="hand right"></span>
+        </div>
+        <button class="light-word" data-light="倾听" style="left:14%; top:42%;"></button>
+        <button class="light-word" data-light="原谅" style="left:62%; top:39%;"></button>
+        <button class="light-word" data-light="拥抱" style="left:30%; top:52%;"></button>
+        <button class="light-word" data-light="回家" style="left:67%; top:55%;"></button>
+        <button class="light-word" data-light="明天" style="left:16%; top:66%;"></button>
+        <button class="light-word" data-light="安静" style="left:55%; top:69%;"></button>
+        <div class="dove palm-dove" id="palmDove"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
+        <div class="copy">
+          <p class="eyebrow">和平落在掌心</p>
+          <h2>和平，和平<br>落在你我掌心</h2>
+          <p>点亮那些微小的选择，让明天慢慢靠近。</p>
+        </div>
+        <div class="bottom-action">
+          <button class="primary-btn" id="toVideo" style="display:none;">看见那段安静</button>
+          <span class="hint">点亮全部光点</span>
+        </div>
+      </section>
+
+      <section class="scene is-video" data-video>
+        <div class="art-card sticker-b"><img src="./assets/bg-war-wounds.png" alt="" /></div>
+        <div class="copy center">
+          <p class="eyebrow">完整视频</p>
+          <h2>有些声音<br>需要安静地听完</h2>
+        </div>
+        <div class="video-box">
+          <video id="mainVideo" src="./H5视频-web.mp4" controls playsinline preload="metadata"></video>
+          <button class="ghost-btn video-ended" id="videoNext">我听完了</button>
+        </div>
+        <div class="video-note">看完这段影像，再把一句和平的话放进明天。</div>
+      </section>
+
+      <section class="scene is-final bg-final" data-music="192">
+        <div class="art-card final"><img src="./assets/bg-final.png" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets/sticker-tea.png" alt="" /></div>
+        <div class="window"></div>
+        <div class="sill"></div>
+        <div class="dove final-dove"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
+        <div class="copy">
+          <p class="eyebrow" style="color:rgba(36,45,50,.62); text-shadow:none;">写给明天</p>
+          <h2 style="color:#263038; text-shadow:none;">如果世界太大<br>就先抱住身旁</h2>
+          <p style="color:rgba(38,48,56,.78); text-shadow:none;">如果路太长，就先学会原谅。</p>
+        </div>
+        <div class="wish-panel">
+          <input class="wish-input" id="wishInput" maxlength="36" placeholder="写给明天的一句话" />
+          <div class="quick-wishes">
+            <button data-wish="愿每个人都能平安回家。">平安回家</button>
+            <button data-wish="愿争吵退场，愿和平靠近。">和平靠近</button>
+            <button data-wish="愿明天比今天更安静。">明天更安静</button>
+          </div>
+          <button class="primary-btn" id="makeCard">生成和平卡片</button>
+          <div class="card" id="wishCard">
+            <div class="lantern-card">
+              <h3>让明天更安静</h3>
+              <div class="wish-text" id="wishText">愿每个人都能平安回家。</div>
+              <small>我把一句和平的话，放进这盏孔明灯。</small>
+              <div class="qr-box">
+                <canvas id="qrCanvas" width="76" height="76" aria-label="传播二维码"></canvas>
+                <span class="share-link" id="shareLink">扫码观看这个 H5</span>
+              </div>
+              <span class="lantern-flame"></span>
+            </div>
+          </div>
+          <button class="primary-btn save-card-btn" id="saveCard">保存分享卡片</button>
+        </div>
+      </section>
+    </main>
+
+    <div class="swipe-tip" id="swipeTip">上滑继续</div>
+  </div>
+
+  <div class="info-modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="info-dialog">
+      <h3 id="infoTitle"></h3>
+      <p id="infoDetail"></p>
+      <small class="info-source" id="infoSource"></small>
+      <button class="info-close" id="infoClose">我知道了</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script>
+    const slides = document.getElementById('slides');
+    const PUBLIC_SHARE_URL = '';
+    const scenes = [...document.querySelectorAll('.scene')];
+    const bgm = document.getElementById('bgm');
+    const video = document.getElementById('mainVideo');
+    const audioToggle = document.getElementById('audioToggle');
+    const progress = document.getElementById('progress');
+    const swipeTip = document.getElementById('swipeTip');
+    let current = 0;
+    let started = false;
+    let audioWanted = true;
+    let touchStartY = 0;
+    let touchStartX = 0;
+    let touchLocked = false;
+
+    scenes.forEach((_, index) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dot.innerHTML = '<span></span>';
+      progress.appendChild(dot);
+    });
+
+    function setProgress() {
+      [...progress.children].forEach((dot, index) => {
+        dot.classList.toggle('on', index <= current);
+      });
+    }
+
+    function updateSlide(skipMusic = false) {
+      slides.style.transform = `translate3d(0, ${-current * 100}dvh, 0)`;
+      setProgress();
+      swipeTip.style.display = scenes[current].hasAttribute('data-video') ? 'none' : 'block';
+      if (!skipMusic) syncMusic();
+      if (!scenes[current].hasAttribute('data-video')) {
+        video.pause();
+      }
+    }
+
+    async function syncMusic() {
+      if (!started || !audioWanted) return;
+      if (scenes[current].hasAttribute('data-video')) {
+        fadeAudio(0, 450, () => bgm.pause());
+        return;
+      }
+      const mark = Number(scenes[current].dataset.music);
+      if (!Number.isNaN(mark) && (bgm.paused || Math.abs(bgm.currentTime - mark) > 18)) {
+        bgm.currentTime = mark;
+      }
+      bgm.volume = 0.82;
+      try { await bgm.play(); } catch (err) {}
+    }
+
+    function fadeAudio(target, duration, done) {
+      const start = bgm.volume;
+      const startTime = performance.now();
+      function tick(now) {
+        const ratio = Math.min(1, (now - startTime) / duration);
+        bgm.volume = start + (target - start) * ratio;
+        if (ratio < 1) requestAnimationFrame(tick);
+        else if (done) done();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function go(index) {
+      const next = Math.max(0, Math.min(scenes.length - 1, index));
+      if (next === current) return;
+      current = next;
+      updateSlide();
+    }
+
+    function nextAfter(selector) {
+      const node = document.querySelector(selector);
+      const index = scenes.findIndex(scene => scene.contains(node));
+      go(index + 1);
+    }
+
+    async function startExperience() {
+      started = true;
+      audioWanted = true;
+      bgm.currentTime = 0;
+      bgm.volume = 0.82;
+      try { await bgm.play(); } catch (err) {}
+      go(1);
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startExperience);
+    document.getElementById('startDove').addEventListener('click', startExperience);
+
+    audioToggle.addEventListener('click', async () => {
+      audioWanted = !audioWanted;
+      audioToggle.style.opacity = audioWanted ? '1' : '.48';
+      if (audioWanted) {
+        started = true;
+        await syncMusic();
+      } else {
+        bgm.pause();
+      }
+    });
+
+    document.addEventListener('touchstart', event => {
+      if (event.target.closest('button,input,video,.word-chip,.kite,.wall')) return;
+      touchStartY = event.touches[0].clientY;
+      touchStartX = event.touches[0].clientX;
+      touchLocked = false;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', event => {
+      if (event.target.closest('button,input,video,.word-chip,.kite,.wall')) return;
+      const dy = event.touches[0].clientY - touchStartY;
+      const dx = event.touches[0].clientX - touchStartX;
+      if (Math.abs(dy) > 52 && Math.abs(dy) > Math.abs(dx) * 1.4 && !touchLocked) {
+        touchLocked = true;
+        if (dy < 0) go(current + 1);
+        else go(current - 1);
+      }
+    }, { passive: true });
+
+    document.addEventListener('wheel', event => {
+      if (Math.abs(event.deltaY) < 24) return;
+      if (event.target.closest('video')) return;
+      if (event.deltaY > 0) go(current + 1);
+      else go(current - 1);
+    }, { passive: true });
+
+    function makeDraggable(el, onMove, onEnd) {
+      let dragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+      el.addEventListener('pointerdown', event => {
+        dragging = true;
+        const rect = el.getBoundingClientRect();
+        offsetX = event.clientX - rect.left;
+        offsetY = event.clientY - rect.top;
+        el.setPointerCapture(event.pointerId);
+      });
+      el.addEventListener('pointermove', event => {
+        if (!dragging) return;
+        const x = event.clientX - offsetX;
+        const y = event.clientY - offsetY;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        el.style.right = 'auto';
+        onMove && onMove(el, event);
+      });
+      el.addEventListener('pointerup', event => {
+        if (!dragging) return;
+        dragging = false;
+        onEnd && onEnd(el, event);
+      });
+    }
+
+    let interestCount = 0;
+    document.querySelectorAll('[data-interest]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (chip.classList.contains('done')) return;
+        chip.classList.add('done');
+        interestCount += 1;
+        if (interestCount >= document.querySelectorAll('[data-interest]').length) {
+          document.getElementById('ledgerBoard').classList.add('revealed');
+          document.getElementById('teaDone').classList.add('show');
+          setTimeout(() => nextAfter('#teaDone'), 1800);
+        }
+      });
+    });
+
+    let puddleCount = 0;
+    document.querySelectorAll('[data-puddle]').forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('on')) return;
+        btn.classList.add('on');
+        const flower = document.querySelectorAll('[data-flower]')[index];
+        if (flower) flower.classList.add('show');
+        puddleCount += 1;
+        if (puddleCount >= 3) {
+          document.getElementById('puddleDone').classList.add('show');
+          setTimeout(() => nextAfter('#puddleDone'), 1400);
+        }
+      });
+    });
+
+    const wall = document.getElementById('wall');
+    const canvas = document.getElementById('wallCanvas');
+    const ctx = canvas.getContext('2d');
+    let erased = 0;
+    let wallDrawing = false;
+
+    function initWall() {
+      const rect = wall.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.fillStyle = 'rgba(80, 78, 76, .96)';
+      ctx.fillRect(0, 0, rect.width, rect.height);
+      ctx.globalCompositeOperation = 'destination-out';
+      erased = 0;
+    }
+
+    function eraseAt(event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      ctx.beginPath();
+      ctx.arc(x, y, 32, 0, Math.PI * 2);
+      ctx.fill();
+      erased += 1;
+      if (erased > 22 && !wall.classList.contains('open')) {
+        wall.classList.add('open');
+        document.getElementById('wallDone').classList.add('show');
+        setTimeout(() => nextAfter('#wallDone'), 1400);
+      }
+    }
+
+    wall.addEventListener('pointerdown', event => {
+      wallDrawing = true;
+      wall.setPointerCapture(event.pointerId);
+      eraseAt(event);
+    });
+    wall.addEventListener('pointermove', event => {
+      if (wallDrawing) eraseAt(event);
+    });
+    wall.addEventListener('pointerup', () => { wallDrawing = false; });
+
+    function completeReach() {
+      document.getElementById('reachStage').classList.add('join');
+      document.getElementById('reachDone').classList.add('show');
+      setTimeout(() => nextAfter('#reachDone'), 1500);
+    }
+
+    document.getElementById('reachBtn').addEventListener('click', completeReach);
+
+    document.querySelectorAll('.reach-hand').forEach(hand => {
+      makeDraggable(hand, null, () => {
+        const left = document.querySelector('.reach-hand.left').getBoundingClientRect();
+        const right = document.querySelector('.reach-hand.right').getBoundingClientRect();
+        if (Math.abs((left.right + left.left) / 2 - (right.right + right.left) / 2) < window.innerWidth * .48) {
+          completeReach();
+        }
+      });
+    });
+
+    const kite = document.getElementById('kite');
+    makeDraggable(kite, (el) => {
+      const top = parseFloat(el.style.top);
+      if (top < window.innerHeight * .26) {
+        document.getElementById('skyWarm').classList.add('show');
+      }
+    }, el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * .28) {
+        document.getElementById('skyWarm').classList.add('show');
+        document.getElementById('kiteDone').classList.add('show');
+        setTimeout(() => nextAfter('#kiteDone'), 1300);
+      }
+    });
+
+    document.getElementById('sunBtn').addEventListener('click', event => {
+      event.currentTarget.classList.add('chosen');
+      event.currentTarget.classList.add('on');
+      document.getElementById('balanceStage').classList.remove('tilt-left', 'tilt-right');
+      document.getElementById('doveWarm').classList.add('show');
+      document.getElementById('sunDone').classList.add('show');
+      setTimeout(() => nextAfter('#sunDone'), 1400);
+    });
+
+    document.querySelector('.scale-pan.left').addEventListener('click', () => {
+      document.getElementById('balanceStage').classList.add('tilt-left');
+      document.getElementById('balanceStage').classList.remove('tilt-right');
+    });
+
+    document.querySelector('.scale-pan.right').addEventListener('click', () => {
+      document.getElementById('balanceStage').classList.add('tilt-right');
+      document.getElementById('balanceStage').classList.remove('tilt-left');
+    });
+
+    const infoModal = document.getElementById('infoModal');
+    const infoTitle = document.getElementById('infoTitle');
+    const infoDetail = document.getElementById('infoDetail');
+    const infoSource = document.getElementById('infoSource');
+    const infoClose = document.getElementById('infoClose');
+    let pendingInfoCard = null;
+
+    function showInfo(card) {
+      pendingInfoCard = card;
+      infoTitle.textContent = card.dataset.title || card.querySelector('strong')?.textContent || '';
+      infoDetail.textContent = card.dataset.detail || card.querySelector('span')?.textContent || '';
+      infoSource.textContent = card.dataset.source || '';
+      infoModal.classList.add('show');
+    }
+
+    function bindInfoCards(selector, doneSelector) {
+      document.querySelectorAll(selector).forEach(card => {
+        card.addEventListener('click', () => showInfo(card));
+      });
+      return () => {
+        const cards = [...document.querySelectorAll(selector)];
+        if (cards.every(card => card.classList.contains('on'))) {
+          document.querySelector(doneSelector).closest('.scene').classList.add('info-completed');
+          document.querySelector(doneSelector).classList.add('show');
+          setTimeout(() => nextAfter(doneSelector), 1500);
+        }
+      };
+    }
+
+    const checkFacts = bindInfoCards('[data-fact]', '#factDone');
+    const checkHarms = bindInfoCards('[data-harm]', '#harmDone');
+    const checkEfforts = bindInfoCards('[data-effort]', '#effortDone');
+    const checkChina = bindInfoCards('[data-china]', '#chinaDone');
+
+    infoClose.addEventListener('click', () => {
+      if (pendingInfoCard) {
+        pendingInfoCard.classList.add('on');
+        if (pendingInfoCard.matches('[data-fact]')) checkFacts();
+        if (pendingInfoCard.matches('[data-harm]')) checkHarms();
+        if (pendingInfoCard.matches('[data-effort]')) checkEfforts();
+        if (pendingInfoCard.matches('[data-china]')) checkChina();
+      }
+      pendingInfoCard = null;
+      infoModal.classList.remove('show');
+    });
+
+    infoModal.addEventListener('click', event => {
+      if (event.target === infoModal) infoClose.click();
+    });
+
+    const lyricRows = [
+      [3, '清晨把门打开'],
+      [8, '风从院子里来'],
+      [13, '你眼里的疲惫'],
+      [18, '我想轻轻放下'],
+      [24, '一张旧旧的桌子'],
+      [29, '两杯温热的茶'],
+      [34, '窗外孩子在笑'],
+      [39, '像雨后的花'],
+      [46, '别再让沉默'],
+      [51, '把心隔成墙'],
+      [56, '把手伸过来'],
+      [61, '让争吵退场'],
+      [66, '和平，和平'],
+      [70, '落在你我掌心'],
+      [74, '和平，和平'],
+      [78, '把眼泪都吹平'],
+      [82, '和平，和平'],
+      [86, '我们慢慢靠近'],
+      [90, '和平，和平'],
+      [94, '让明天更安静'],
+      [99, '胡同里的风筝'],
+      [104, '飞过屋檐上'],
+      [109, '谁都不是对手'],
+      [114, '谁都想回家'],
+      [120, '那只黑白的鸽子'],
+      [125, '停在红砖墙'],
+      [130, '它不问谁赢了'],
+      [135, '只想有阳光'],
+      [141, '别再让沉默'],
+      [146, '把心隔成墙'],
+      [151, '把手伸过来'],
+      [156, '让争吵退场'],
+      [161, '和平，和平'],
+      [165, '落在你我掌心'],
+      [169, '和平，和平'],
+      [173, '把眼泪都吹平'],
+      [177, '和平，和平'],
+      [181, '我们慢慢靠近'],
+      [185, '和平，和平'],
+      [189, '让明天更安静'],
+      [194, '如果世界太大'],
+      [199, '就先抱住身旁'],
+      [204, '如果路太长'],
+      [209, '就先学会原谅'],
+      [214, '和平，和平'],
+      [217, '落在你我掌心'],
+      [220, '让明天更安静']
+    ];
+    const lyricTrack = document.getElementById('lyricTrack');
+    lyricRows.forEach(([, text]) => {
+      const item = document.createElement('span');
+      item.className = 'lyric-item';
+      item.textContent = text;
+      lyricTrack.appendChild(item);
+    });
+
+    function updateLyricRail() {
+      const t = bgm.currentTime || 0;
+      let active = 0;
+      lyricRows.forEach(([time], index) => {
+        if (t >= time) active = index;
+      });
+      const items = [...lyricTrack.children];
+      items.forEach((item, index) => item.classList.toggle('active', index === active));
+      const activeItem = items[active];
+      if (activeItem) {
+        const rail = document.querySelector('.lyric-rail');
+        const offset = activeItem.offsetTop - rail.clientHeight * .38;
+        lyricTrack.style.transform = `translateY(${-Math.max(0, offset)}px)`;
+      }
+    }
+
+    bgm.addEventListener('timeupdate', updateLyricRail);
+
+    const lyricTexts = [
+      '和平，和平，落在你我掌心',
+      '和平，和平，把眼泪都吹平',
+      '和平，和平，我们慢慢靠近',
+      '和平，和平，让明天更安静'
+    ];
+    let lightCount = 0;
+    document.querySelectorAll('[data-light]').forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('on')) return;
+        btn.classList.add('on');
+        btn.textContent = btn.dataset.light;
+        lightCount += 1;
+        const line = document.getElementById('lyricsLine');
+        line.textContent = lyricTexts[Math.min(lyricTexts.length - 1, lightCount - 1)];
+        line.classList.remove('show');
+        requestAnimationFrame(() => line.classList.add('show'));
+        if (lightCount >= 6) {
+          document.getElementById('palmDove').classList.add('show');
+          document.getElementById('toVideo').style.display = 'inline-flex';
+        }
+      });
+    });
+
+    document.getElementById('toVideo').addEventListener('click', () => {
+      const videoIndex = scenes.findIndex(scene => scene.hasAttribute('data-video'));
+      go(videoIndex);
+    });
+
+    video.addEventListener('play', () => {
+      if (!bgm.paused) fadeAudio(0, 420, () => bgm.pause());
+    });
+    video.addEventListener('ended', () => {
+      document.getElementById('videoNext').classList.add('show');
+    });
+    document.getElementById('videoNext').addEventListener('click', () => {
+      const videoIndex = scenes.findIndex(scene => scene.hasAttribute('data-video'));
+      go(videoIndex + 1);
+    });
+
+    document.querySelectorAll('[data-wish]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('wishInput').value = btn.dataset.wish;
+      });
+    });
+
+    document.getElementById('makeCard').addEventListener('click', () => {
+      const input = document.getElementById('wishInput');
+      const text = input.value.trim() || '愿每个人都能平安回家。';
+      document.getElementById('wishText').textContent = text;
+      document.getElementById('wishCard').classList.add('show');
+      document.getElementById('saveCard').classList.add('show');
+      const shareUrl = PUBLIC_SHARE_URL || location.href.split('#')[0];
+      document.getElementById('shareLink').textContent = '扫码观看这个 H5';
+      if (window.QRCode && QRCode.toCanvas) {
+        QRCode.toCanvas(document.getElementById('qrCanvas'), shareUrl, {
+          width: 76,
+          margin: 1,
+          color: { dark: '#4a321c', light: '#fff8df' }
+        });
+      } else {
+        const canvas = document.getElementById('qrCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff8df';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#4a321c';
+        ctx.font = '10px sans-serif';
+        ctx.fillText('QR', 30, 40);
+        document.getElementById('shareLink').textContent = '扫码观看这个 H5';
+      }
+    });
+
+    document.getElementById('saveCard').addEventListener('click', () => {
+      const card = document.getElementById('wishCard');
+      const rect = card.getBoundingClientRect();
+      const canvas = document.createElement('canvas');
+      canvas.width = 900;
+      canvas.height = 1200;
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, '#fff2c8');
+      gradient.addColorStop(1, '#e9a34a');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(255,255,255,.72)';
+      ctx.beginPath();
+      ctx.roundRect(90, 90, 720, 990, 170);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(132,83,37,.22)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.fillStyle = '#3d332a';
+      ctx.textAlign = 'center';
+      ctx.font = '700 58px Microsoft YaHei';
+      ctx.fillText('让明天更安静', 450, 245);
+      ctx.font = '400 36px Microsoft YaHei';
+      wrapCanvasText(ctx, document.getElementById('wishText').textContent, 450, 360, 620, 54);
+      ctx.font = '400 26px Microsoft YaHei';
+      ctx.fillStyle = 'rgba(61,51,42,.7)';
+      ctx.fillText('我把一句和平的话，放进这盏孔明灯。', 450, 650);
+      const qr = document.getElementById('qrCanvas');
+      ctx.drawImage(qr, 355, 730, 190, 190);
+      ctx.fillStyle = 'rgba(61,51,42,.64)';
+      ctx.font = '400 24px Microsoft YaHei';
+      ctx.fillText('扫码观看 H5', 450, 970);
+      const link = document.createElement('a');
+      link.download = '让明天更安静-和平卡片.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+      let line = '';
+      let yy = y;
+      [...text].forEach(char => {
+        const test = line + char;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          ctx.fillText(line, x, yy);
+          line = char;
+          yy += lineHeight;
+        } else {
+          line = test;
+        }
+      });
+      if (line) ctx.fillText(line, x, yy);
+    }
+
+    window.addEventListener('resize', () => {
+      initWall();
+      updateSlide(true);
+    });
+
+    initWall();
+    updateSlide(true);
+  </script>
+</body>
+</html>
