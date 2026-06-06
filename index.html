@@ -1629,18 +1629,19 @@
 
     .lantern-card {
       position: relative;
-      min-height: 340px;
-      padding: 38px 24px 26px;
+      min-height: 410px;
+      padding: 44px 24px 28px;
       text-align: center;
-      border-radius: 50% 50% 22px 22px / 18% 18% 22px 22px;
+      border-radius: 46% 46% 26px 26px / 14% 14% 20px 20px;
       background:
-        linear-gradient(90deg, transparent 0 18%, rgba(134,87,38,.14) 18% 19%, transparent 19% 49%, rgba(134,87,38,.13) 49% 50%, transparent 50% 81%, rgba(134,87,38,.14) 81% 82%, transparent 82%),
-        radial-gradient(circle at 50% 90%, rgba(255,169,56,.5), transparent 24%),
-        linear-gradient(180deg, rgba(255,248,217,.96), rgba(244,180,82,.9));
+        linear-gradient(90deg, transparent 0 14%, rgba(126,76,26,.18) 14% 15%, transparent 15% 31%, rgba(126,76,26,.12) 31% 32%, transparent 32% 49%, rgba(126,76,26,.16) 49% 50%, transparent 50% 68%, rgba(126,76,26,.12) 68% 69%, transparent 69% 85%, rgba(126,76,26,.18) 85% 86%, transparent 86%),
+        radial-gradient(ellipse at 50% 92%, rgba(255,151,37,.62), transparent 28%),
+        radial-gradient(ellipse at 50% 35%, rgba(255,255,255,.62), transparent 42%),
+        linear-gradient(180deg, rgba(255,249,222,.96), rgba(249,198,105,.94));
       box-shadow:
-        0 0 46px rgba(255,190,91,.58),
-        0 22px 60px rgba(100,69,28,.25),
-        inset 0 0 36px rgba(255,255,255,.42);
+        0 0 70px rgba(255,190,91,.62),
+        0 28px 70px rgba(100,69,28,.3),
+        inset 0 0 46px rgba(255,255,255,.48);
       overflow: hidden;
       animation: lanternFloat 4.8s ease-in-out infinite;
     }
@@ -1654,10 +1655,10 @@
     .lantern-card::after {
       content: "";
       position: absolute;
-      top: 18px;
-      bottom: 28px;
-      width: 1px;
-      background: rgba(126,78,28,.18);
+      top: 24px;
+      bottom: 34px;
+      width: 2px;
+      background: linear-gradient(180deg, transparent, rgba(126,78,28,.18), transparent);
     }
 
     .lantern-card::before { left: 28%; }
@@ -1666,9 +1667,9 @@
     .lantern-flame {
       position: absolute;
       left: 50%;
-      bottom: 17px;
-      width: 38px;
-      height: 46px;
+      bottom: 22px;
+      width: 48px;
+      height: 58px;
       transform: translateX(-50%);
       border-radius: 50% 50% 45% 45%;
       background: radial-gradient(circle at 50% 62%, #fff7c6, #f6a33c 58%, transparent 64%);
@@ -1701,7 +1702,7 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      margin-top: 12px;
+      margin-top: 18px;
       color: rgba(83,57,31,.68);
       font-size: 12px;
     }
@@ -1719,18 +1720,20 @@
       justify-content: center;
     }
 
-    #qrCanvas {
-      width: 76px;
-      height: 76px;
-      padding: 6px;
-      border-radius: 8px;
-      background: rgba(255,255,255,.82);
+    #qrImage {
+      width: 96px;
+      height: 96px;
+      padding: 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 12px 26px rgba(112,75,32,.16);
     }
 
     .share-link {
       word-break: break-all;
-      max-width: 170px;
+      max-width: 150px;
       text-align: left;
+      line-height: 1.55;
     }
 
     @keyframes lanternFloat {
@@ -2138,8 +2141,8 @@
               <div class="wish-text" id="wishText">愿每个人都能平安回家。</div>
               <small>我把一句和平的话，放进这盏孔明灯。</small>
               <div class="qr-box">
-                <canvas id="qrCanvas" width="76" height="76" aria-label="传播二维码"></canvas>
-                <span class="share-link" id="shareLink">扫码观看这个 H5</span>
+                <img id="qrImage" src="./assets/share-qr.png" alt="扫码观看这个 H5" />
+                <span class="share-link" id="shareLink">扫码观看<br>让明天更安静</span>
               </div>
               <span class="lantern-flame"></span>
             </div>
@@ -2161,7 +2164,6 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
   <script>
     const slides = document.getElementById('slides');
     const PUBLIC_SHARE_URL = 'https://3426198257-cloud.github.io/anti-war-h5-peace/';
@@ -2617,24 +2619,7 @@
       document.getElementById('wishText').textContent = text;
       document.getElementById('wishCard').classList.add('show');
       document.getElementById('saveCard').classList.add('show');
-      const shareUrl = PUBLIC_SHARE_URL || location.href.split('#')[0];
-      document.getElementById('shareLink').textContent = '扫码观看这个 H5';
-      if (window.QRCode && QRCode.toCanvas) {
-        QRCode.toCanvas(document.getElementById('qrCanvas'), shareUrl, {
-          width: 76,
-          margin: 1,
-          color: { dark: '#4a321c', light: '#fff8df' }
-        });
-      } else {
-        const canvas = document.getElementById('qrCanvas');
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#fff8df';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#4a321c';
-        ctx.font = '10px sans-serif';
-        ctx.fillText('QR', 30, 40);
-        document.getElementById('shareLink').textContent = '扫码观看这个 H5';
-      }
+      document.getElementById('shareLink').innerHTML = '扫码观看<br>让明天更安静';
     });
 
     document.getElementById('saveCard').addEventListener('click', () => {
@@ -2665,7 +2650,7 @@
       ctx.font = '400 26px Microsoft YaHei';
       ctx.fillStyle = 'rgba(61,51,42,.7)';
       ctx.fillText('我把一句和平的话，放进这盏孔明灯。', 450, 650);
-      const qr = document.getElementById('qrCanvas');
+      const qr = document.getElementById('qrImage');
       ctx.drawImage(qr, 355, 730, 190, 190);
       ctx.fillStyle = 'rgba(61,51,42,.64)';
       ctx.font = '400 24px Microsoft YaHei';
