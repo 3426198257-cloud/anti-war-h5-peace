@@ -327,6 +327,33 @@
       cursor: pointer;
     }
 
+    .audio-toggle.is-off {
+      opacity: .5;
+    }
+
+    .audio-tip {
+      position: fixed;
+      left: 50%;
+      top: calc(72px + var(--safe-top));
+      z-index: 45;
+      transform: translate(-50%, -10px);
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      color: rgba(255,255,255,.86);
+      background: rgba(10, 15, 20, .5);
+      backdrop-filter: blur(14px);
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease, transform .28s ease;
+    }
+
+    .audio-tip.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
     .audio-toggle svg {
       width: 19px;
       height: 19px;
@@ -516,6 +543,26 @@
       height: 62px;
       transform-origin: center;
       cursor: pointer;
+    }
+
+    .dove::marker { content: ""; }
+
+    .dove-hotspot {
+      position: absolute;
+      z-index: 6;
+      left: calc(50% + 2px);
+      top: calc(14% + min(68vw, 330px) * 1.34 - 86px);
+      width: 150px;
+      height: 118px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      transform: translateX(-10%);
+      cursor: pointer;
+    }
+
+    .dove.fly-feedback {
+      animation: doveLift .72s ease both;
     }
 
     .dove::before {
@@ -1763,6 +1810,12 @@
       45% { transform: rotate(8deg); }
     }
 
+    @keyframes doveLift {
+      0% { transform: translateY(0) scale(1); }
+      45% { transform: translateY(-18px) scale(1.06); }
+      100% { transform: translateY(-44px) scale(.92); opacity: 0; }
+    }
+
     @keyframes steam {
       0% { transform: translateY(8px) translateX(0); opacity: 0; }
       35% { opacity: .8; }
@@ -1802,6 +1855,7 @@
     <aside class="lyric-rail" aria-label="歌词同步">
       <div class="lyric-track" id="lyricTrack"></div>
     </aside>
+    <div class="audio-tip" id="audioTip">点右上角开启音乐</div>
 
     <main class="slides" id="slides">
       <section class="scene cover-scene" data-music="0">
@@ -1813,6 +1867,7 @@
         <div class="dove home" id="startDove" role="button" aria-label="开始">
           <span class="wing"></span><span class="eye"></span><span class="beak"></span>
         </div>
+        <button class="dove-hotspot" id="doveHotspot" aria-label="轻触白鸽开始"></button>
         <div class="copy">
           <p class="eyebrow">反战互动 H5</p>
           <h1>让明天<br>更安静</h1>
@@ -2171,6 +2226,7 @@
     const bgm = document.getElementById('bgm');
     const video = document.getElementById('mainVideo');
     const audioToggle = document.getElementById('audioToggle');
+    const audioTip = document.getElementById('audioTip');
     const progress = document.getElementById('progress');
     const swipeTip = document.getElementById('swipeTip');
     let current = 0;
@@ -2179,6 +2235,18 @@
     let touchStartY = 0;
     let touchStartX = 0;
     let touchLocked = false;
+    let introLaunched = false;
+
+    function showAudioTip(text = '点右上角开启音乐') {
+      audioTip.textContent = text;
+      audioTip.classList.add('show');
+      clearTimeout(showAudioTip.timer);
+      showAudioTip.timer = setTimeout(() => audioTip.classList.remove('show'), 2200);
+    }
+
+    function updateAudioButton() {
+      audioToggle.classList.toggle('is-off', !audioWanted || bgm.paused);
+    }
 
     scenes.forEach((_, index) => {
       const dot = document.createElement('div');
@@ -2214,7 +2282,12 @@
         bgm.currentTime = mark;
       }
       bgm.volume = 0.82;
-      try { await bgm.play(); } catch (err) {}
+      try {
+        await bgm.play();
+      } catch (err) {
+        showAudioTip();
+      }
+      updateAudioButton();
     }
 
     function fadeAudio(target, duration, done) {
@@ -2243,30 +2316,49 @@
     }
 
     async function startExperience() {
+      if (introLaunched) return;
+      introLaunched = true;
+      document.getElementById('startDove').classList.add('fly-feedback');
       started = true;
       audioWanted = true;
       bgm.currentTime = 0;
       bgm.volume = 0.82;
-      try { await bgm.play(); } catch (err) {}
-      go(1);
+      try {
+        await bgm.play();
+      } catch (err) {
+        showAudioTip();
+      }
+      updateAudioButton();
+      setTimeout(() => go(1), 360);
     }
 
     document.getElementById('startBtn').addEventListener('click', startExperience);
     document.getElementById('startDove').addEventListener('click', startExperience);
+    document.getElementById('doveHotspot').addEventListener('click', startExperience);
+    scenes[0].addEventListener('click', event => {
+      if (event.target.closest('.audio-toggle')) return;
+      startExperience();
+    });
 
     audioToggle.addEventListener('click', async () => {
-      audioWanted = !audioWanted;
-      audioToggle.style.opacity = audioWanted ? '1' : '.48';
-      if (audioWanted) {
+      if (!started || bgm.paused || !audioWanted) {
+        audioWanted = true;
         started = true;
         await syncMusic();
       } else {
+        audioWanted = false;
         bgm.pause();
       }
+      updateAudioButton();
     });
 
     document.addEventListener('touchstart', event => {
       if (event.target.closest('button,input,video,.word-chip,.kite,.wall')) return;
+      if (!started && current === 0) {
+        started = true;
+        audioWanted = true;
+        syncMusic();
+      }
       touchStartY = event.touches[0].clientY;
       touchStartX = event.touches[0].clientX;
       touchLocked = false;
