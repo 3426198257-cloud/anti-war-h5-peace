@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
@@ -352,6 +352,33 @@
     .audio-tip.show {
       opacity: 1;
       transform: translate(-50%, 0);
+    }
+
+    .music-gate {
+      position: fixed;
+      left: 24px;
+      right: 64px;
+      bottom: calc(86px + var(--safe-bottom));
+      z-index: 44;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .music-gate.hide {
+      opacity: 0;
+      transform: translateY(18px);
+      pointer-events: none;
+    }
+
+    .music-gate .primary-btn,
+    .music-gate .ghost-btn {
+      min-height: 42px;
+      padding: 0 14px;
+      font-size: 14px;
+      white-space: nowrap;
     }
 
     .audio-toggle svg {
@@ -1839,7 +1866,11 @@
 </head>
 <body>
   <div class="app" id="app">
-    <audio id="bgm" src="./白鸽落在窗台.mp3" preload="auto" loop></audio>
+    <audio id="bgm" src="./bgm.mp3" preload="auto" loop></audio>
+    <div class="music-gate" id="musicGate">
+      <button class="primary-btn" id="unlockMusic">开启音乐并进入</button>
+      <button class="ghost-btn" id="silentStart">静音进入</button>
+    </div>
 
     <div class="topbar">
       <div class="progress" id="progress"></div>
@@ -1859,7 +1890,7 @@
 
     <main class="slides" id="slides">
       <section class="scene cover-scene" data-music="0">
-        <div class="art-card sticker-a"><img src="./assets/bg-window.png" alt="" /></div>
+        <div class="art-card sticker-a"><img src="./assets_web/bg-window.jpg" alt="" /></div>
         <div class="window"></div>
         <div class="curtain left"></div>
         <div class="curtain right"></div>
@@ -1880,7 +1911,7 @@
       </section>
 
       <section class="scene tea-scene" data-music="14">
-        <div class="art-card sticker-a"><img src="./assets/sticker-war-table.png" alt="" /></div>
+        <div class="art-card sticker-a"><img src="./assets_web/sticker-war-table.jpg" alt="" /></div>
         <div class="ledger-board" id="ledgerBoard">
           <div class="ledger-cost">平民伤亡<br>流离失所<br>城市破碎</div>
         </div>
@@ -1900,8 +1931,8 @@
       </section>
 
       <section class="scene rain-scene" data-music="30">
-        <div class="art-card alley"><img src="./assets/bg-alley.png" alt="" /></div>
-        <div class="art-card sticker-b"><img src="./assets/sticker-puddle.png" alt="" /></div>
+        <div class="art-card alley"><img src="./assets_web/bg-alley.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/sticker-puddle.jpg" alt="" /></div>
         <div class="rain-lane"></div>
         <div class="child"></div>
         <button class="puddle" data-puddle style="left:14%; bottom:22%;"></button>
@@ -1922,7 +1953,7 @@
       </section>
 
       <section class="scene wall-scene" data-music="48">
-        <div class="art-card sticker-a"><img src="./assets/sticker-wall.png" alt="" /></div>
+        <div class="art-card sticker-a"><img src="./assets_web/sticker-wall.jpg" alt="" /></div>
         <div class="warm-behind"></div>
         <div class="wall-text left">我只是<br>害怕</div>
         <div class="wall-text right">我也想<br>回家</div>
@@ -1940,7 +1971,7 @@
       </section>
 
       <section class="scene reach-scene" data-music="58">
-        <div class="art-card sticker-b"><img src="./assets/sticker-wall.png" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/sticker-wall.jpg" alt="" /></div>
         <div class="reach-stage" id="reachStage">
           <div class="quiet-path"></div>
           <div class="reach-hand left"></div>
@@ -1959,8 +1990,8 @@
       </section>
 
       <section class="scene kite-scene" data-music="98">
-        <div class="art-card alley"><img src="./assets/bg-alley.png" alt="" /></div>
-        <div class="art-card sticker-b"><img src="./assets/sticker-dove-kite.png" alt="" /></div>
+        <div class="art-card alley"><img src="./assets_web/bg-alley.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/sticker-dove-kite.jpg" alt="" /></div>
         <div class="route-map">
           <svg viewBox="0 0 320 260" aria-hidden="true">
             <path class="route-path" d="M34 204 C84 170, 86 116, 146 126 S224 122, 274 56" />
@@ -1982,7 +2013,7 @@
       </section>
 
       <section class="scene dove-scene" data-music="116">
-        <div class="art-card sticker-a"><img src="./assets/sticker-dove-kite.png" alt="" /></div>
+        <div class="art-card sticker-a"><img src="./assets_web/sticker-dove-kite.jpg" alt="" /></div>
         <div class="balance-stage" id="balanceStage">
           <div class="balance-line"></div>
           <div class="balance-pillar"></div>
@@ -2002,8 +2033,8 @@
 
       <section class="scene war-list-scene" data-music="132">
         <div class="warm-behind"></div>
-        <div class="art-card war"><img src="./assets/bg-war-wounds.png" alt="" /></div>
-        <div class="art-card sticker-b"><img src="./assets/real-ukraine-refugees.jpg" alt="" /></div>
+        <div class="art-card war"><img src="./assets_web/bg-war-wounds.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/real-ukraine-refugees.jpg" alt="" /></div>
         <div class="copy">
           <p class="eyebrow">近年的战争与冲突</p>
           <h2>世界仍有许多地方<br>没有等来安静</h2>
@@ -2035,8 +2066,8 @@
       </section>
 
       <section class="scene harm-scene" data-music="146">
-        <div class="art-card sticker-a"><img src="./assets/real-gaza-aid.jpg" alt="" /></div>
-        <div class="art-card sticker-b"><img src="./assets/sticker-war-table.png" alt="" /></div>
+        <div class="art-card sticker-a"><img src="./assets_web/real-gaza-aid.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/sticker-war-table.jpg" alt="" /></div>
         <div class="warm-behind"></div>
         <div class="copy">
           <p class="eyebrow">战争造成的伤害</p>
@@ -2068,8 +2099,8 @@
       </section>
 
       <section class="scene world-scene" data-music="162">
-        <div class="art-card sticker-a"><img src="./assets/real-aid-box.jpg" alt="" /></div>
-        <div class="art-card sticker-b"><img src="./assets/sticker-aid.png" alt="" /></div>
+        <div class="art-card sticker-a"><img src="./assets_web/real-aid-box.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/sticker-aid.jpg" alt="" /></div>
         <div class="warm-behind"></div>
         <div class="copy">
           <p class="eyebrow">世界为了和平做了什么</p>
@@ -2101,8 +2132,8 @@
       </section>
 
       <section class="scene china-scene" data-music="176">
-        <div class="art-card sticker-a"><img src="./assets/sticker-china-press.png" alt="" /></div>
-        <div class="art-card sticker-b"><img src="./assets/sticker-china-peacekeeping.png" alt="" /></div>
+        <div class="art-card sticker-a"><img src="./assets_web/sticker-china-press.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/sticker-china-peacekeeping.jpg" alt="" /></div>
         <div class="warm-behind"></div>
         <div class="copy">
           <p class="eyebrow">中国的和平贡献</p>
@@ -2134,7 +2165,7 @@
       </section>
 
       <section class="scene is-warm palm-scene" data-music="205">
-        <div class="art-card sticker-a"><img src="./assets/sticker-dove-kite.png" alt="" /></div>
+        <div class="art-card sticker-a"><img src="./assets_web/sticker-dove-kite.jpg" alt="" /></div>
         <div class="lyrics-line" id="lyricsLine">和平，和平，落在你我掌心</div>
         <div class="palm">
           <span class="hand left"></span>
@@ -2159,21 +2190,21 @@
       </section>
 
       <section class="scene is-video" data-video>
-        <div class="art-card sticker-b"><img src="./assets/bg-war-wounds.png" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/bg-war-wounds.jpg" alt="" /></div>
         <div class="copy center">
           <p class="eyebrow">完整视频</p>
           <h2>有些声音<br>需要安静地听完</h2>
         </div>
         <div class="video-box">
-          <video id="mainVideo" src="./H5视频-web.mp4" controls playsinline preload="metadata"></video>
+          <video id="mainVideo" src="./video.mp4" controls playsinline preload="metadata"></video>
           <button class="ghost-btn video-ended" id="videoNext">我听完了</button>
         </div>
         <div class="video-note">看完这段影像，再把一句和平的话放进明天。</div>
       </section>
 
       <section class="scene is-final bg-final" data-music="192">
-        <div class="art-card final"><img src="./assets/bg-final.png" alt="" /></div>
-        <div class="art-card sticker-b"><img src="./assets/sticker-tea.png" alt="" /></div>
+        <div class="art-card final"><img src="./assets_web/bg-final.jpg" alt="" /></div>
+        <div class="art-card sticker-b"><img src="./assets_web/sticker-tea.jpg" alt="" /></div>
         <div class="window"></div>
         <div class="sill"></div>
         <div class="dove final-dove"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
@@ -2196,7 +2227,7 @@
               <div class="wish-text" id="wishText">愿每个人都能平安回家。</div>
               <small>我把一句和平的话，放进这盏孔明灯。</small>
               <div class="qr-box">
-                <img id="qrImage" src="./assets/share-qr.png" alt="扫码观看这个 H5" />
+                <img id="qrImage" src="./assets_web/share-qr.png" alt="扫码观看这个 H5" />
                 <span class="share-link" id="shareLink">扫码观看<br>让明天更安静</span>
               </div>
               <span class="lantern-flame"></span>
@@ -2227,6 +2258,7 @@
     const video = document.getElementById('mainVideo');
     const audioToggle = document.getElementById('audioToggle');
     const audioTip = document.getElementById('audioTip');
+    const musicGate = document.getElementById('musicGate');
     const progress = document.getElementById('progress');
     const swipeTip = document.getElementById('swipeTip');
     let current = 0;
@@ -2246,6 +2278,10 @@
 
     function updateAudioButton() {
       audioToggle.classList.toggle('is-off', !audioWanted || bgm.paused);
+    }
+
+    function hideMusicGate() {
+      musicGate.classList.add('hide');
     }
 
     scenes.forEach((_, index) => {
@@ -2332,11 +2368,40 @@
       setTimeout(() => go(1), 360);
     }
 
+    async function unlockAndStart() {
+      if (introLaunched) return;
+      started = true;
+      audioWanted = true;
+      bgm.currentTime = 0;
+      bgm.volume = 0.82;
+      try {
+        await bgm.play();
+        hideMusicGate();
+      } catch (err) {
+        showAudioTip('请再点一次开启音乐');
+      }
+      await startExperience();
+    }
+
+    function startWithoutMusic() {
+      if (introLaunched) return;
+      introLaunched = true;
+      document.getElementById('startDove').classList.add('fly-feedback');
+      started = true;
+      audioWanted = false;
+      hideMusicGate();
+      bgm.pause();
+      updateAudioButton();
+      setTimeout(() => go(1), 360);
+    }
+
     document.getElementById('startBtn').addEventListener('click', startExperience);
     document.getElementById('startDove').addEventListener('click', startExperience);
     document.getElementById('doveHotspot').addEventListener('click', startExperience);
+    document.getElementById('unlockMusic').addEventListener('click', unlockAndStart);
+    document.getElementById('silentStart').addEventListener('click', startWithoutMusic);
     scenes[0].addEventListener('click', event => {
-      if (event.target.closest('.audio-toggle')) return;
+      if (event.target.closest('.audio-toggle,.music-gate')) return;
       startExperience();
     });
 
@@ -2779,3 +2844,4 @@
   </script>
 </body>
 </html>
+
