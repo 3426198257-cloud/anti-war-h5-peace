@@ -16,6 +16,8 @@
       --muted: rgba(255, 255, 255, .72);
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --font-title: "Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+      --font-body: "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -27,7 +29,7 @@
       overflow: hidden;
       color: var(--paper);
       background: #111821;
-      font-family: "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif;
+      font-family: var(--font-body);
     }
 
     body {
@@ -473,7 +475,8 @@
 
     h1, h2 {
       margin: 0;
-      font-weight: 600;
+      font-family: var(--font-title);
+      font-weight: 700;
       letter-spacing: 0;
       line-height: 1.16;
     }
@@ -491,6 +494,10 @@
       font-size: 15px;
       line-height: 1.62;
       color: rgba(255,255,255,.82);
+    }
+
+    .copy p:not(.eyebrow) {
+      text-wrap: pretty;
     }
 
     .bottom-action {
@@ -856,23 +863,33 @@
 
     .complete-line {
       position: absolute;
-      left: 24px;
-      right: 24px;
-      bottom: calc(22% + var(--safe-bottom));
+      left: 28px;
+      right: 76px;
+      bottom: calc(82px + var(--safe-bottom));
       z-index: 7;
       text-align: center;
       color: #fff7df;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      background: rgba(9, 13, 18, .36);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 16px 34px rgba(0,0,0,.18);
       opacity: 0;
       transform: translateY(16px);
       transition: opacity .5s ease, transform .5s ease;
       pointer-events: none;
-      line-height: 1.7;
-      font-size: 18px;
+      line-height: 1.55;
+      font-size: 15px;
     }
 
     .complete-line.show {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    .scene:has(.complete-line.show) .bottom-action {
+      visibility: hidden;
     }
 
     .rain-lane {
@@ -1219,8 +1236,8 @@
     }
 
     .fact-card {
-      min-height: 66px;
-      padding: 10px 9px;
+      min-height: 60px;
+      padding: 9px 9px;
       border: 1px solid rgba(255,255,255,.18);
       border-radius: 8px;
       color: rgba(255,255,255,.82);
@@ -1234,7 +1251,7 @@
 
     .fact-card strong {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       color: #fff4d0;
       font-size: 14px;
       line-height: 1.2;
@@ -1242,8 +1259,8 @@
 
     .fact-card span {
       display: block;
-      font-size: 11px;
-      line-height: 1.36;
+      font-size: 10.5px;
+      line-height: 1.32;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -1281,7 +1298,7 @@
       position: absolute;
       left: 24px;
       right: 64px;
-      bottom: calc(66px + var(--safe-bottom));
+      bottom: calc(34px + var(--safe-bottom));
       width: auto;
       margin: 0;
     }
@@ -1304,16 +1321,7 @@
     #harmDone,
     #effortDone,
     #chinaDone {
-      bottom: calc(12% + var(--safe-bottom));
-      left: 28px;
-      right: 78px;
-      padding: 12px 14px;
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 8px;
-      background: rgba(9, 13, 18, .34);
-      backdrop-filter: blur(14px);
-      font-size: 16px;
-      box-shadow: 0 16px 34px rgba(0,0,0,.18);
+      bottom: calc(86px + var(--safe-bottom));
     }
 
     .war-list-scene .copy,
@@ -1824,6 +1832,10 @@
       scrollbar-width: none;
     }
 
+    .is-final .wish-panel {
+      transform: translateY(-88px);
+    }
+
     .wish-panel::-webkit-scrollbar { display: none; }
 
     .wish-input {
@@ -1845,18 +1857,33 @@
     }
 
     .wish-panel.card-ready .wish-form {
-      opacity: .2;
+      opacity: 0;
       transform: translateY(-8px);
-      max-height: 34px;
-      margin-bottom: 4px;
+      max-height: 0;
+      margin-bottom: 0;
       pointer-events: none;
+    }
+
+    .is-final .copy {
+      margin-top: 56px;
+      max-width: min(300px, calc(100vw - 110px));
+    }
+
+    .is-final .copy h2 {
+      font-size: clamp(25px, 6.8vw, 34px);
+      line-height: 1.16;
     }
 
     .quick-wishes {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin: 12px 0 14px;
+      margin: 10px 0 0;
+    }
+
+    #makeCard {
+      width: 100%;
+      margin-top: 10px;
     }
 
     .quick-wishes button {
@@ -1879,8 +1906,8 @@
 
     .lantern-card {
       position: relative;
-      min-height: 318px;
-      padding: 30px 20px 20px;
+      min-height: 292px;
+      padding: 26px 18px 18px;
       text-align: center;
       border-radius: 46% 46% 26px 26px / 14% 14% 20px 20px;
       background:
@@ -1972,9 +1999,9 @@
     }
 
     #qrImage {
-      width: 82px;
-      height: 82px;
-      padding: 7px;
+      width: 76px;
+      height: 76px;
+      padding: 6px;
       border-radius: 10px;
       background: rgba(255,255,255,.9);
       box-shadow: 0 12px 26px rgba(112,75,32,.16);
@@ -2089,11 +2116,11 @@
         <div class="copy">
           <p class="eyebrow">反战互动 H5</p>
           <h1>让明天<br>更安静</h1>
-          <p>当世界太吵，<br>先听见一只白鸽落下的声音。</p>
+          <p>战争最先夺走的，往往是普通人安稳生活的声音。</p>
         </div>
         <div class="bottom-action">
           <button class="primary-btn" id="startBtn">轻触白鸽开始</button>
-          <span class="hint">开启后将播放背景歌曲</span>
+          <span class="hint">开启音乐，进入这段关于战争与和平的旅程</span>
         </div>
       </section>
 
@@ -2106,14 +2133,14 @@
         <button class="interest-chip" data-interest style="right:16%; top:51%;">疆界</button>
         <button class="interest-chip" data-interest style="left:18%; top:68%;">权力</button>
         <button class="interest-chip" data-interest style="right:18%; top:68%;">军火</button>
-        <div class="complete-line" id="teaDone">利益被写进账本，<br>代价却落在普通人身上。</div>
+        <div class="complete-line" id="teaDone">当利益被写进账本，<br>平民常被迫承担最沉重的代价。</div>
         <div class="copy">
-          <p class="eyebrow">利益的账本</p>
-          <h2>战争常被利益<br>推向普通人</h2>
-          <p>资源、疆界、权力、军火，会把人的生活写成代价。</p>
+          <p class="eyebrow">冲突背后的账本</p>
+          <h2>战争常从利益开始<br>却由平民承受后果</h2>
+          <p>资源、边界、权力和军火交易，会把城市、学校与家庭推向风险。</p>
         </div>
         <div class="bottom-action">
-          <span class="hint">点开利益标签，看见被遮住的代价</span>
+          <span class="hint">点开标签，看见利益背后的现实代价</span>
         </div>
       </section>
 
@@ -2128,32 +2155,32 @@
         <span class="flower" data-flower style="left:24%; bottom:32%;"></span>
         <span class="flower" data-flower style="left:66%; bottom:37%;"></span>
         <span class="flower" data-flower style="left:48%; bottom:24%;"></span>
-        <div class="complete-line" id="puddleDone">孩子的笑声，<br>本该落在雨后的街巷。</div>
+        <div class="complete-line" id="puddleDone">孩子需要的是教室、街巷和雨后的空气，<br>不是警报、废墟和逃离。</div>
         <div class="copy">
-          <p class="eyebrow">雨后的花</p>
-          <h2>窗外孩子在笑<br>像雨后的花</h2>
-          <p>反战不是遥远的姿态，是守住每一个普通清晨。</p>
+          <p class="eyebrow">被打断的童年</p>
+          <h2>孩子本该在雨后奔跑<br>而不是在炮火里长大</h2>
+          <p>反战不是抽象口号，而是守住儿童上学、玩耍和安全回家的权利。</p>
         </div>
         <div class="bottom-action">
-          <span class="hint">轻触水洼，让阴云变成蓝天</span>
+          <span class="hint">轻触水洼，让被遮住的天空重新显现</span>
         </div>
       </section>
 
       <section class="scene wall-scene" data-music="48">
         <div class="art-card sticker-a"><img src="./assets_web/sticker-wall.jpg" alt="" /></div>
         <div class="warm-behind"></div>
-        <div class="wall-text left">我只是<br>害怕</div>
-        <div class="wall-text right">我也想<br>回家</div>
+        <div class="wall-text left">停火<br>通道</div>
+        <div class="wall-text right">谈判<br>援助</div>
         <div class="wall" id="wall"><canvas id="wallCanvas"></canvas></div>
         <div class="dove wall-dove"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
-        <div class="complete-line" id="wallDone">不是所有靠近，<br>都需要先分出输赢。</div>
+        <div class="complete-line" id="wallDone">墙被打开时，停火、人道通道和谈判才有机会进入现场。</div>
         <div class="copy">
-          <p class="eyebrow">沉默之墙</p>
-          <h2>别再让沉默<br>把心隔成墙</h2>
-          <p>把手伸过来，让争吵退场。</p>
+          <p class="eyebrow">被封住的通道</p>
+          <h2>让停火与援助<br>穿过封锁的墙</h2>
+          <p>战争中，沉默和封锁会延长伤害；对话与救援则为生命争取时间。</p>
         </div>
         <div class="bottom-action">
-          <span class="hint">用手指擦开这堵墙</span>
+          <span class="hint">用手指擦开墙面，为通道留出缝隙</span>
         </div>
       </section>
 
@@ -2164,15 +2191,15 @@
           <div class="reach-hand left"></div>
           <div class="reach-hand right"></div>
         </div>
-        <div class="complete-line" id="reachDone">靠近不是认输，<br>是让争吵先退场。</div>
+        <div class="complete-line" id="reachDone">谈判不是软弱，<br>而是把更多生命从冲突边缘拉回来。</div>
         <div class="copy">
-          <p class="eyebrow">把手伸过来</p>
-          <h2>把手伸过来<br>让争吵退场</h2>
-          <p>和平有时不是一句口号，而是先向彼此走近一步。</p>
+          <p class="eyebrow">谈判桌之前</p>
+          <h2>把武器放低一点<br>让对话先发生</h2>
+          <p>和平需要各方停止把胜负放在生命之前，给谈判留下真正的空间。</p>
         </div>
         <div class="bottom-action">
-          <button class="primary-btn" id="reachBtn">让手靠近</button>
-          <span class="hint">拖动任意一只手，让它们在光里靠近</span>
+          <button class="primary-btn" id="reachBtn">靠近谈判桌</button>
+          <span class="hint">拖动任意一只手，让对话靠近一点</span>
         </div>
       </section>
 
@@ -2184,18 +2211,18 @@
             <path class="route-path" d="M34 204 C84 170, 86 116, 146 126 S224 122, 274 56" />
           </svg>
           <div class="route-home"></div>
-          <div class="route-label">从风里出发<br>朝灯火回家</div>
+          <div class="route-label">避开封锁<br>通向家门</div>
         </div>
         <div class="sky-warm" id="skyWarm"></div>
         <div class="kite map-kite" id="kite" aria-label="风筝"></div>
-        <div class="complete-line" id="kiteDone">愿每一条回家的路，<br>都不再被硝烟挡住。</div>
+        <div class="complete-line" id="kiteDone">对许多人来说，和平不是宏大的词，<br>而是一条可以安全回家的路。</div>
         <div class="copy">
-          <p class="eyebrow">谁都想回家</p>
-          <h2>谁都不是对手<br>谁都想回家</h2>
-          <p>战争里，最普通的愿望，往往最难抵达。</p>
+          <p class="eyebrow">回家的路线</p>
+          <h2>战火中的人<br>首先想抵达家门</h2>
+          <p>当桥梁、道路和边境被冲突切断，最普通的归途也会变得漫长。</p>
         </div>
         <div class="bottom-action">
-          <span class="hint">拖动风筝，让它飞过屋檐</span>
+          <span class="hint">拖动风筝，沿着路线飞向灯火</span>
         </div>
       </section>
 
@@ -2210,11 +2237,11 @@
         </div>
         <div class="sky-warm" id="doveWarm"></div>
         <div class="dove brick-dove" style="top:52%;"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
-        <div class="complete-line" id="sunDone">它不问谁赢了，<br>只想有阳光。</div>
+        <div class="complete-line" id="sunDone">胜负无法修复废墟，<br>停火后的阳光才照得到生活。</div>
         <div class="copy">
-          <p class="eyebrow">红砖墙上的白鸽</p>
-          <h2>它不问谁赢了<br>只想有阳光</h2>
-          <p>当胜负被放下，生活才重新露出一点光。</p>
+          <p class="eyebrow">胜负之外</p>
+          <h2>战争没有真正赢家<br>平民只需要阳光</h2>
+          <p>当胜负叙事被放下，重建、医疗、学校和家园才重新进入视野。</p>
         </div>
       </section>
 
@@ -2224,8 +2251,8 @@
         <div class="art-card sticker-b"><img src="./assets_web/real-ukraine-refugees.jpg" alt="" /></div>
         <div class="copy">
           <p class="eyebrow">近年的战争与冲突</p>
-          <h2>世界仍有许多地方<br>没有等来安静</h2>
-          <p>这些名字，背后不是地图上的区域，而是无数普通人的生活。</p>
+          <h2>世界仍有许多地方<br>没有等来停火</h2>
+          <p>这些冲突不是地图上的色块，而是家庭迁徙、城市受损和日常崩塌。</p>
         </div>
         <div class="fact-grid">
           <button class="fact-card" data-fact data-title="俄乌战争" data-detail="自 2022 年 2 月冲突全面升级以来，联合国难民署持续记录到数百万人离开乌克兰，另有大量人口在乌克兰境内流离失所。战争也造成平民伤亡、基础设施破坏和长期的人道需求。" data-source="参考：UNHCR Ukraine Emergency、OHCHR 平民伤亡监测。">
@@ -2246,7 +2273,7 @@
           </button>
         </div>
         <div class="source-note">资料参考：UNHCR、OCHA、OHCHR、UNICEF、联合国新闻等公开信息。</div>
-        <div class="complete-line" id="factDone">战争从来不是远方的名词，<br>它会落到每一扇窗后。</div>
+        <div class="complete-line" id="factDone">战争从来不是远方的名词，<br>它会落到医院、学校和每一扇窗后。</div>
         <div class="bottom-action">
           <span class="hint">轻触卡片，了解这些冲突</span>
         </div>
@@ -2258,8 +2285,8 @@
         <div class="warm-behind"></div>
         <div class="copy">
           <p class="eyebrow">战争造成的伤害</p>
-          <h2>伤害不止是数字<br>也是被打断的日常</h2>
-          <p>战争会把生活拆成很多碎片，然后让人用很久很久去拾回。</p>
+          <h2>伤害不止是数字<br>也是被迫中断的人生</h2>
+          <p>伤亡统计背后，是被迫离开的家庭、停课的孩子和失去照护的人。</p>
         </div>
         <div class="fact-grid">
           <button class="fact-card" data-harm data-title="离散" data-detail="战争最直接的后果之一，是人们离开家。有人跨过国境成为难民，有人在自己的国家内不断迁移；他们带走的往往只有证件、钥匙、药和孩子的书包。" data-source="参考：UNHCR 全球难民与流离失所者统计。">
@@ -2279,7 +2306,7 @@
             <span>恐惧和失去会在停火后仍停留很久。</span>
           </button>
         </div>
-        <div class="complete-line" id="harmDone">每一种伤害背后，<br>都是一个想回家的人。</div>
+        <div class="complete-line" id="harmDone">每一种伤害背后，<br>都有具体的人、名字和再也回不去的日常。</div>
         <div class="bottom-action">
           <span class="hint">点亮四种战争留下的伤</span>
         </div>
@@ -2291,8 +2318,8 @@
         <div class="warm-behind"></div>
         <div class="copy">
           <p class="eyebrow">世界为了和平做了什么</p>
-          <h2>和平不是自然发生<br>它需要被维护</h2>
-          <p>在炮火之外，也有人一直在为停火、救援和重建奔走。</p>
+          <h2>和平不是自然发生<br>它需要制度与行动维护</h2>
+          <p>在战场之外，斡旋、救援、维和和重建不断为停火争取可能。</p>
         </div>
         <div class="fact-grid efforts-grid">
           <button class="fact-card effort-card" data-effort data-title="联合国斡旋" data-detail="联合国通过秘书长斡旋、特使机制、安理会决议和人道协调，推动停火、人员撤离、人道准入和政治谈判。斡旋往往缓慢，但它给冲突双方留下对话通道。" data-source="参考：United Nations Peacemaking、UN Security Council。">
@@ -2312,7 +2339,7 @@
             <span>普通人也在以自己的方式守住尊严。</span>
           </button>
         </div>
-        <div class="complete-line" id="effortDone">和平不是自然发生，<br>它需要一次次被选择。</div>
+        <div class="complete-line" id="effortDone">和平不是自然发生，<br>它依靠谈判、救援、监督和重建一步步抵达。</div>
         <div class="bottom-action">
           <span class="hint">点亮这些和平努力</span>
         </div>
@@ -2324,8 +2351,8 @@
         <div class="warm-behind"></div>
         <div class="copy">
           <p class="eyebrow">中国的和平贡献</p>
-          <h2>把劝和促谈<br>放在冲突之前</h2>
-          <p>中国长期主张通过对话协商解决争端，也参与联合国维和与人道援助。</p>
+          <h2>以对话解决争端<br>以行动支持和平</h2>
+          <p>中国主张政治解决热点问题，并通过维和、人道援助与安全倡议参与和平建设。</p>
         </div>
         <div class="fact-grid efforts-grid">
           <button class="fact-card china-card" data-china data-title="劝和促谈" data-detail="中国在乌克兰危机、巴以问题等热点议题上多次呼吁停火止战、通过对话协商解决争端，强调政治解决和避免冲突扩大。" data-source="参考：中国外交部关于政治解决乌克兰危机、巴以问题立场文件与例行记者会。">
@@ -2345,7 +2372,7 @@
             <span>倡导共同、综合、合作、可持续的安全观。</span>
           </button>
         </div>
-        <div class="complete-line" id="chinaDone">和平需要世界同行，<br>也需要每一个国家承担责任。</div>
+        <div class="complete-line" id="chinaDone">和平需要国际社会同行，<br>也需要每个国家在冲突前承担责任。</div>
         <div class="bottom-action">
           <span class="hint">点亮中国的和平行动</span>
         </div>
@@ -2358,21 +2385,21 @@
           <span class="hand left"></span>
           <span class="hand right"></span>
         </div>
-        <button class="light-word" data-light="倾听" style="left:18%; top:44%;"></button>
-        <button class="light-word" data-light="原谅" style="left:68%; top:41%;"></button>
-        <button class="light-word" data-light="拥抱" style="left:35%; top:54%;"></button>
+        <button class="light-word" data-light="停火" style="left:18%; top:44%;"></button>
+        <button class="light-word" data-light="救援" style="left:68%; top:41%;"></button>
+        <button class="light-word" data-light="谈判" style="left:35%; top:54%;"></button>
         <button class="light-word" data-light="回家" style="left:72%; top:57%;"></button>
-        <button class="light-word" data-light="明天" style="left:22%; top:68%;"></button>
-        <button class="light-word" data-light="安静" style="left:58%; top:70%;"></button>
+        <button class="light-word" data-light="重建" style="left:22%; top:68%;"></button>
+        <button class="light-word" data-light="和平" style="left:58%; top:70%;"></button>
         <div class="dove palm-dove" id="palmDove"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
         <div class="copy">
-          <p class="eyebrow">和平落在掌心</p>
-          <h2>和平，和平<br>落在你我掌心</h2>
-          <p>点亮那些微小的选择，让明天慢慢靠近。</p>
+          <p class="eyebrow">把和平放回现实</p>
+          <h2>停火、救援与重建<br>都需要被认真选择</h2>
+          <p>和平不是一句漂亮的话，而是让生命先从危险中退出来。</p>
         </div>
         <div class="bottom-action">
-          <button class="primary-btn" id="toVideo" style="display:none;">看见那段安静</button>
-          <span class="hint">点亮全部光点</span>
+          <button class="primary-btn" id="toVideo" style="display:none;">观看完整影像</button>
+          <span class="hint">点亮全部光点，完成这份和平清单</span>
         </div>
       </section>
 
@@ -2380,13 +2407,13 @@
         <div class="art-card sticker-b"><img src="./assets_web/bg-war-wounds.jpg" alt="" /></div>
         <div class="copy center">
           <p class="eyebrow">完整视频</p>
-          <h2>有些声音<br>需要安静地听完</h2>
+          <h2>有些影像<br>需要被认真看见</h2>
         </div>
         <div class="video-box">
           <video id="mainVideo" src="./video.mp4" controls playsinline preload="metadata"></video>
           <button class="ghost-btn video-ended" id="videoNext">我听完了</button>
         </div>
-        <div class="video-note">看完这段影像，再把一句和平的话放进明天。</div>
+        <div class="video-note">看完这段影像，再把一句关于停火、回家与重建的话留给明天。</div>
       </section>
 
       <section class="scene is-final bg-final" data-music="192">
@@ -2397,24 +2424,24 @@
         <div class="dove final-dove"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
         <div class="copy">
           <p class="eyebrow" style="color:rgba(36,45,50,.62); text-shadow:none;">写给明天</p>
-          <h2 style="color:#263038; text-shadow:none;">如果世界太大<br>就先抱住身旁</h2>
-          <p style="color:rgba(38,48,56,.78); text-shadow:none;">如果路太长，就先学会原谅。</p>
+          <h2 style="color:#263038; text-shadow:none;">愿停火到来<br>愿平民回家</h2>
+          <p style="color:rgba(38,48,56,.78); text-shadow:none;">把一句和平的话，写成可以被看见的愿望。</p>
         </div>
         <div class="wish-panel">
           <div class="wish-form" id="wishForm">
-            <input class="wish-input" id="wishInput" maxlength="36" placeholder="写给明天的一句话" />
-            <div class="quick-wishes">
-              <button data-wish="愿每个人都能平安回家。">平安回家</button>
-              <button data-wish="愿争吵退场，愿和平靠近。">和平靠近</button>
-              <button data-wish="愿明天比今天更安静。">明天更安静</button>
-            </div>
+            <input class="wish-input" id="wishInput" maxlength="36" placeholder="写下一句关于和平的话" />
             <button class="primary-btn" id="makeCard">生成和平卡片</button>
+            <div class="quick-wishes">
+              <button data-wish="愿停火早日到来，愿平民都能回家。">停火回家</button>
+              <button data-wish="愿救援通道畅通，愿孩子重新回到学校。">救援通道</button>
+              <button data-wish="愿战争止步，愿重建从今天开始。">重建明天</button>
+            </div>
           </div>
           <div class="card" id="wishCard">
             <div class="lantern-card">
               <h3>让明天更安静</h3>
-              <div class="wish-text" id="wishText">愿每个人都能平安回家。</div>
-              <small>我把一句和平的话，放进这盏孔明灯。</small>
+              <div class="wish-text" id="wishText">愿停火早日到来，愿平民都能回家。</div>
+              <small>把这句话放进灯里，也放进每一次选择里。</small>
               <div class="qr-box">
                 <img id="qrImage" src="./assets_web/share-qr.png" alt="扫码观看这个 H5" />
                 <span class="share-link" id="shareLink">扫码观看<br>让明天更安静</span>
@@ -2494,7 +2521,8 @@
       setProgress();
       musicGate.classList.toggle('is-hidden-by-page', current !== 0 || started);
       const isLast = current === scenes.length - 1;
-      swipeTip.classList.toggle('hide', (!started && current === 0) || isLast || scenes[current].hasAttribute('data-video'));
+      const isInfoPage = current >= 7 && current <= 10;
+      swipeTip.classList.toggle('hide', (!started && current === 0) || isLast || isInfoPage || scenes[current].hasAttribute('data-video'));
       lyricRail.classList.toggle('hidden', isLast);
       lyricRail.classList.toggle('subtle', current >= 7 || scenes[current].hasAttribute('data-video'));
       if (!skipMusic) syncMusic();
@@ -2918,10 +2946,10 @@
     bgm.addEventListener('timeupdate', updateLyricRail);
 
     const lyricTexts = [
-      '和平，和平，落在你我掌心',
-      '和平，和平，把眼泪都吹平',
-      '和平，和平，我们慢慢靠近',
-      '和平，和平，让明天更安静'
+      '停火，先让生命离开危险',
+      '救援，先把道路重新打开',
+      '谈判，让和平有机会发生',
+      '重建，让明天重新安静'
     ];
     let lightCount = 0;
     document.querySelectorAll('[data-light]').forEach((btn, index) => {
@@ -2965,7 +2993,7 @@
 
     document.getElementById('makeCard').addEventListener('click', () => {
       const input = document.getElementById('wishInput');
-      const text = input.value.trim() || '愿每个人都能平安回家。';
+      const text = input.value.trim() || '愿停火早日到来，愿平民都能回家。';
       document.getElementById('wishText').textContent = text;
       document.querySelector('.wish-panel').classList.add('card-ready');
       document.getElementById('wishCard').classList.add('show');
@@ -3003,7 +3031,7 @@
       wrapCanvasText(ctx, document.getElementById('wishText').textContent, 450, 360, 620, 54);
       ctx.font = '400 26px Microsoft YaHei';
       ctx.fillStyle = 'rgba(61,51,42,.7)';
-      ctx.fillText('我把一句和平的话，放进这盏孔明灯。', 450, 650);
+      ctx.fillText('把这句话放进灯里，也放进每一次选择里。', 450, 650);
       const qr = document.getElementById('qrImage');
       ctx.drawImage(qr, 355, 730, 190, 190);
       ctx.fillStyle = 'rgba(61,51,42,.64)';
