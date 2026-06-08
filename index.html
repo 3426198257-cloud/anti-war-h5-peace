@@ -225,7 +225,7 @@
     }
 
     .art-card.alley {
-      right: -18px;
+      right: 2px;
       bottom: 14%;
       width: min(42vw, 190px);
       height: min(32vh, 260px);
@@ -234,7 +234,7 @@
     }
 
     .art-card.war {
-      right: 18px;
+      right: 36px;
       top: 24%;
       width: min(36vw, 168px);
       height: min(26vh, 220px);
@@ -243,7 +243,7 @@
     }
 
     .art-card.final {
-      right: -10px;
+      right: 8px;
       top: 28%;
       width: min(38vw, 180px);
       height: min(25vh, 220px);
@@ -259,14 +259,14 @@
     }
 
     .art-card.sticker-a {
-      right: -28px;
-      top: 28%;
+      right: -8px;
+      top: 30%;
       transform: rotate(2deg);
     }
 
     .art-card.sticker-b {
-      left: -28px;
-      bottom: 15%;
+      left: -8px;
+      bottom: 18%;
       transform: rotate(-2deg);
     }
 
@@ -437,13 +437,24 @@
       line-height: 1.15;
       letter-spacing: 0;
       white-space: nowrap;
-      transition: color .35s ease, transform .35s ease, text-shadow .35s ease;
+      transition: color .22s ease, transform .22s ease, text-shadow .22s ease, opacity .22s ease;
+      opacity: .72;
     }
 
     .lyric-item.active {
       color: #fff4cf;
       transform: scale(1.04);
       text-shadow: 0 0 16px rgba(255,211,116,.6);
+      opacity: 1;
+    }
+
+    .lyric-item.past {
+      opacity: .38;
+    }
+
+    .lyric-item.next {
+      color: rgba(255,255,255,.58);
+      opacity: .82;
     }
 
     .scene.is-final ~ .lyric-rail,
@@ -1298,7 +1309,7 @@
       position: absolute;
       left: 24px;
       right: 64px;
-      bottom: calc(34px + var(--safe-bottom));
+      bottom: calc(58px + var(--safe-bottom));
       width: auto;
       margin: 0;
     }
@@ -2870,54 +2881,55 @@
       if (event.target === infoModal) infoClose.click();
     });
 
+    const lyricDuration = 224.96;
     const lyricRows = [
-      [3, '清晨把门打开'],
-      [8, '风从院子里来'],
-      [13, '你眼里的疲惫'],
-      [18, '我想轻轻放下'],
-      [24, '一张旧旧的桌子'],
-      [29, '两杯温热的茶'],
-      [34, '窗外孩子在笑'],
-      [39, '像雨后的花'],
-      [46, '别再让沉默'],
-      [51, '把心隔成墙'],
-      [56, '把手伸过来'],
-      [61, '让争吵退场'],
-      [66, '和平，和平'],
-      [70, '落在你我掌心'],
-      [74, '和平，和平'],
-      [78, '把眼泪都吹平'],
-      [82, '和平，和平'],
-      [86, '我们慢慢靠近'],
-      [90, '和平，和平'],
-      [94, '让明天更安静'],
-      [99, '胡同里的风筝'],
-      [104, '飞过屋檐上'],
-      [109, '谁都不是对手'],
-      [114, '谁都想回家'],
-      [120, '那只黑白的鸽子'],
-      [125, '停在红砖墙'],
-      [130, '它不问谁赢了'],
-      [135, '只想有阳光'],
-      [141, '别再让沉默'],
-      [146, '把心隔成墙'],
-      [151, '把手伸过来'],
-      [156, '让争吵退场'],
-      [161, '和平，和平'],
-      [165, '落在你我掌心'],
-      [169, '和平，和平'],
-      [173, '把眼泪都吹平'],
-      [177, '和平，和平'],
-      [181, '我们慢慢靠近'],
-      [185, '和平，和平'],
-      [189, '让明天更安静'],
-      [194, '如果世界太大'],
-      [199, '就先抱住身旁'],
-      [204, '如果路太长'],
-      [209, '就先学会原谅'],
-      [214, '和平，和平'],
-      [217, '落在你我掌心'],
-      [220, '让明天更安静']
+      [2.8, '清晨把门打开'],
+      [7.4, '风从院子里来'],
+      [12.2, '你眼里的疲惫'],
+      [17.0, '我想轻轻放下'],
+      [23.1, '一张旧旧的桌子'],
+      [28.2, '两杯温热的茶'],
+      [33.4, '窗外孩子在笑'],
+      [38.0, '像雨后的花'],
+      [45.2, '别再让沉默'],
+      [50.0, '把心隔成墙'],
+      [55.0, '把手伸过来'],
+      [59.6, '让争吵退场'],
+      [64.6, '和平，和平'],
+      [68.8, '落在你我掌心'],
+      [72.8, '和平，和平'],
+      [76.8, '把眼泪都吹平'],
+      [81.0, '和平，和平'],
+      [85.0, '我们慢慢靠近'],
+      [89.0, '和平，和平'],
+      [93.1, '让明天更安静'],
+      [99.2, '胡同里的风筝'],
+      [104.0, '飞过屋檐上'],
+      [108.7, '谁都不是对手'],
+      [113.2, '谁都想回家'],
+      [119.4, '那只黑白的鸽子'],
+      [124.7, '停在红砖墙'],
+      [129.6, '它不问谁赢了'],
+      [134.5, '只想有阳光'],
+      [140.8, '别再让沉默'],
+      [145.4, '把心隔成墙'],
+      [150.4, '把手伸过来'],
+      [155.0, '让争吵退场'],
+      [160.0, '和平，和平'],
+      [164.0, '落在你我掌心'],
+      [168.0, '和平，和平'],
+      [172.2, '把眼泪都吹平'],
+      [176.2, '和平，和平'],
+      [180.4, '我们慢慢靠近'],
+      [184.4, '和平，和平'],
+      [188.6, '让明天更安静'],
+      [194.2, '如果世界太大'],
+      [198.7, '就先抱住身旁'],
+      [203.2, '如果路太长'],
+      [208.0, '就先学会原谅'],
+      [213.5, '和平，和平'],
+      [217.0, '落在你我掌心'],
+      [220.6, '让明天更安静']
     ];
     const lyricTrack = document.getElementById('lyricTrack');
     lyricRows.forEach(([, text]) => {
@@ -2927,23 +2939,55 @@
       lyricTrack.appendChild(item);
     });
 
+    let activeLyricIndex = -1;
+    let lyricFrame = 0;
+
+    function currentLyricTime() {
+      const duration = Number.isFinite(bgm.duration) && bgm.duration > 0 ? bgm.duration : lyricDuration;
+      return (bgm.currentTime || 0) % duration;
+    }
+
     function updateLyricRail() {
-      const t = bgm.currentTime || 0;
+      const t = currentLyricTime();
       let active = 0;
       lyricRows.forEach(([time], index) => {
         if (t >= time) active = index;
       });
       const items = [...lyricTrack.children];
-      items.forEach((item, index) => item.classList.toggle('active', index === active));
+      items.forEach((item, index) => {
+        item.classList.toggle('active', index === active);
+        item.classList.toggle('past', index < active);
+        item.classList.toggle('next', index === active + 1);
+      });
       const activeItem = items[active];
       if (activeItem) {
         const rail = document.querySelector('.lyric-rail');
         const offset = activeItem.offsetTop - rail.clientHeight * .38;
-        lyricTrack.style.transform = `translateY(${-Math.max(0, offset)}px)`;
+        if (active !== activeLyricIndex) {
+          activeLyricIndex = active;
+          lyricTrack.style.transform = `translateY(${-Math.max(0, offset)}px)`;
+        }
       }
     }
 
-    bgm.addEventListener('timeupdate', updateLyricRail);
+    function tickLyricRail() {
+      updateLyricRail();
+      lyricFrame = requestAnimationFrame(tickLyricRail);
+    }
+
+    function startLyricRail() {
+      cancelAnimationFrame(lyricFrame);
+      lyricFrame = requestAnimationFrame(tickLyricRail);
+    }
+
+    bgm.addEventListener('play', startLyricRail);
+    bgm.addEventListener('pause', () => cancelAnimationFrame(lyricFrame));
+    bgm.addEventListener('seeked', () => {
+      activeLyricIndex = -1;
+      updateLyricRail();
+    });
+    bgm.addEventListener('loadedmetadata', updateLyricRail);
+    updateLyricRail();
 
     const lyricTexts = [
       '停火，先让生命离开危险',
