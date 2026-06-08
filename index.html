@@ -408,6 +408,15 @@
       overflow: hidden;
       opacity: .74;
       pointer-events: none;
+      transition: opacity .35s ease;
+    }
+
+    .lyric-rail.subtle {
+      opacity: .34;
+    }
+
+    .lyric-rail.hidden {
+      opacity: 0;
     }
 
     .lyric-track {
@@ -443,8 +452,8 @@
     .copy {
       position: relative;
       z-index: 5;
-      max-width: min(360px, calc(100vw - 92px));
-      margin-top: 52px;
+      max-width: min(350px, calc(100vw - 104px));
+      margin-top: 50px;
       text-shadow: 0 2px 18px rgba(0,0,0,.3);
     }
 
@@ -456,7 +465,7 @@
     }
 
     .eyebrow {
-      margin: 0 0 16px;
+      margin: 0 0 13px;
       color: rgba(255,255,255,.72);
       font-size: 13px;
       letter-spacing: 0;
@@ -470,28 +479,39 @@
     }
 
     h1 {
-      font-size: clamp(34px, 10.4vw, 52px);
+      font-size: clamp(32px, 9.6vw, 50px);
     }
 
     h2 {
-      font-size: clamp(27px, 7.6vw, 40px);
+      font-size: clamp(26px, 7.1vw, 38px);
     }
 
     p {
-      margin: 16px 0 0;
-      font-size: 16px;
-      line-height: 1.72;
+      margin: 14px 0 0;
+      font-size: 15px;
+      line-height: 1.62;
       color: rgba(255,255,255,.82);
     }
 
     .bottom-action {
-      position: relative;
+      position: absolute;
+      left: 24px;
+      right: 64px;
+      bottom: calc(42px + var(--safe-bottom));
       z-index: 8;
-      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 9px;
+    }
+
+    .scene:not(.active) .bottom-action {
+      visibility: hidden;
+    }
+
+    .scene:not(.active) .fact-grid,
+    .scene:not(.active) .source-note {
+      visibility: hidden;
     }
 
     .cover-scene .bottom-action {
@@ -523,7 +543,9 @@
 
     .hint {
       color: rgba(255,255,255,.64);
-      font-size: 13px;
+      font-size: 12px;
+      line-height: 1.35;
+      text-align: center;
     }
 
     .window {
@@ -1037,7 +1059,7 @@
 
     .reach-hand {
       position: absolute;
-      top: 42%;
+      top: 44%;
       width: 42%;
       height: 86px;
       border-radius: 46px 62px 42px 48px;
@@ -1089,11 +1111,15 @@
     .reach-hand.right::after { left: -22px; transform: scaleX(-1) rotate(-12deg); }
 
     .reach-stage.join .reach-hand.left {
-      transform: translateX(34%) rotate(7deg);
+      transform: translateX(30%) rotate(7deg);
     }
 
     .reach-stage.join .reach-hand.right {
-      transform: translateX(-34%) rotate(-7deg);
+      transform: translateX(-30%) rotate(-7deg);
+    }
+
+    .reach-scene .bottom-action {
+      bottom: calc(64px + var(--safe-bottom));
     }
 
     .quiet-path {
@@ -1187,14 +1213,14 @@
       z-index: 6;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 7px;
       width: min(100%, 430px);
-      margin: 12px auto 0;
+      margin: 8px auto 0;
     }
 
     .fact-card {
-      min-height: 82px;
-      padding: 14px 12px;
+      min-height: 66px;
+      padding: 10px 9px;
       border: 1px solid rgba(255,255,255,.18);
       border-radius: 8px;
       color: rgba(255,255,255,.82);
@@ -1208,15 +1234,20 @@
 
     .fact-card strong {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: #fff4d0;
-      font-size: 16px;
+      font-size: 14px;
+      line-height: 1.2;
     }
 
     .fact-card span {
       display: block;
-      font-size: 12px;
-      line-height: 1.55;
+      font-size: 11px;
+      line-height: 1.36;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .fact-card.on {
@@ -1229,11 +1260,37 @@
       position: relative;
       z-index: 6;
       width: min(100%, 430px);
-      margin: 10px auto 0;
-      color: rgba(255,255,255,.52);
-      font-size: 11px;
-      line-height: 1.5;
+      margin: 7px auto 0;
+      color: rgba(255,255,255,.44);
+      font-size: 10px;
+      line-height: 1.35;
       text-align: center;
+    }
+
+    .war-list-scene .source-note,
+    .harm-scene .source-note,
+    .world-scene .source-note,
+    .china-scene .source-note {
+      display: none;
+    }
+
+    .war-list-scene .fact-grid,
+    .harm-scene .fact-grid,
+    .world-scene .fact-grid,
+    .china-scene .fact-grid {
+      position: absolute;
+      left: 24px;
+      right: 64px;
+      bottom: calc(66px + var(--safe-bottom));
+      width: auto;
+      margin: 0;
+    }
+
+    .war-list-scene .bottom-action,
+    .harm-scene .bottom-action,
+    .world-scene .bottom-action,
+    .china-scene .bottom-action {
+      display: none;
     }
 
     .scene.info-completed .fact-grid {
@@ -1257,6 +1314,31 @@
       backdrop-filter: blur(14px);
       font-size: 16px;
       box-shadow: 0 16px 34px rgba(0,0,0,.18);
+    }
+
+    .war-list-scene .copy,
+    .harm-scene .copy,
+    .world-scene .copy,
+    .china-scene .copy {
+      margin-top: 72px;
+      max-width: min(350px, calc(100vw - 106px));
+    }
+
+    .war-list-scene h2,
+    .harm-scene h2,
+    .world-scene h2,
+    .china-scene h2 {
+      font-size: clamp(24px, 6.6vw, 36px);
+      line-height: 1.14;
+    }
+
+    .war-list-scene .copy p,
+    .harm-scene .copy p,
+    .world-scene .copy p,
+    .china-scene .copy p {
+      max-width: 290px;
+      font-size: 12.5px;
+      line-height: 1.48;
     }
 
     .info-modal {
@@ -1364,10 +1446,10 @@
     .route-map {
       position: absolute;
       left: 50%;
-      bottom: 13%;
+      bottom: 15%;
       z-index: 3;
       width: min(82vw, 360px);
-      height: 45%;
+      height: 42%;
       transform: translateX(-50%);
       border: 1px solid rgba(255,255,255,.18);
       border-radius: 8px;
@@ -1421,8 +1503,8 @@
       left: 18px;
       bottom: 24px;
       color: rgba(255,255,255,.74);
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 12px;
+      line-height: 1.45;
     }
 
     .map-kite {
@@ -1434,10 +1516,10 @@
     .balance-stage {
       position: absolute;
       left: 50%;
-      bottom: 15%;
+      bottom: 18%;
       z-index: 3;
       width: min(82vw, 360px);
-      height: 43%;
+      height: 38%;
       transform: translateX(-50%);
     }
 
@@ -1487,10 +1569,10 @@
     .sun-choice {
       position: absolute;
       left: 50%;
-      top: 4%;
+      top: 0;
       z-index: 5;
-      width: 106px;
-      height: 106px;
+      width: 94px;
+      height: 94px;
       transform: translateX(-50%);
       border: 1px solid rgba(255,242,184,.42);
       border-radius: 50%;
@@ -1683,16 +1765,19 @@
     .video-box {
       position: relative;
       z-index: 5;
-      width: min(100%, 440px);
-      margin: 0 auto;
+      width: min(100%, 430px);
+      margin: 0 auto 44px;
       display: flex;
-      flex: 1;
       min-height: 0;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      gap: 18px;
-      transform: translateY(-5%);
+      gap: 14px;
+      transform: translateY(-3%);
+    }
+
+    .is-video .copy.center {
+      margin: 88px auto 0;
     }
 
     .video-note {
@@ -1713,7 +1798,7 @@
 
     video {
       width: 100%;
-      max-height: 68dvh;
+      max-height: 48dvh;
       border-radius: 8px;
       background: #050608;
       box-shadow: 0 24px 70px rgba(0,0,0,.5);
@@ -1732,9 +1817,9 @@
       position: relative;
       z-index: 6;
       width: min(100%, 430px);
-      margin: 0 auto;
+      margin: 0 auto 24px;
       padding-bottom: 8px;
-      max-height: 58dvh;
+      max-height: 60dvh;
       overflow-y: auto;
       scrollbar-width: none;
     }
@@ -1751,6 +1836,20 @@
       background: rgba(255,255,255,.78);
       outline: none;
       box-shadow: 0 14px 36px rgba(105,74,42,.14);
+    }
+
+    .wish-form {
+      transition: opacity .35s ease, transform .35s ease, max-height .35s ease, margin .35s ease;
+      max-height: 170px;
+      overflow: hidden;
+    }
+
+    .wish-panel.card-ready .wish-form {
+      opacity: .2;
+      transform: translateY(-8px);
+      max-height: 34px;
+      margin-bottom: 4px;
+      pointer-events: none;
     }
 
     .quick-wishes {
@@ -1780,8 +1879,8 @@
 
     .lantern-card {
       position: relative;
-      min-height: 338px;
-      padding: 34px 20px 22px;
+      min-height: 318px;
+      padding: 30px 20px 20px;
       text-align: center;
       border-radius: 46% 46% 26px 26px / 14% 14% 20px 20px;
       background:
@@ -1862,8 +1961,6 @@
       display: none;
       width: 100%;
       margin-top: 10px;
-      position: sticky;
-      bottom: 0;
       z-index: 4;
     }
 
@@ -1897,14 +1994,21 @@
 
     .swipe-tip {
       position: absolute;
-      left: 50%;
+      left: 24px;
+      right: 64px;
       bottom: calc(14px + var(--safe-bottom));
       z-index: 12;
-      transform: translateX(-50%);
+      transform: none;
       color: rgba(255,255,255,.56);
       font-size: 12px;
+      line-height: 1.25;
+      text-align: center;
       opacity: .9;
       pointer-events: none;
+    }
+
+    .swipe-tip.hide {
+      display: none;
     }
 
     @keyframes curtain {
@@ -2297,13 +2401,15 @@
           <p style="color:rgba(38,48,56,.78); text-shadow:none;">如果路太长，就先学会原谅。</p>
         </div>
         <div class="wish-panel">
-          <input class="wish-input" id="wishInput" maxlength="36" placeholder="写给明天的一句话" />
-          <div class="quick-wishes">
-            <button data-wish="愿每个人都能平安回家。">平安回家</button>
-            <button data-wish="愿争吵退场，愿和平靠近。">和平靠近</button>
-            <button data-wish="愿明天比今天更安静。">明天更安静</button>
+          <div class="wish-form" id="wishForm">
+            <input class="wish-input" id="wishInput" maxlength="36" placeholder="写给明天的一句话" />
+            <div class="quick-wishes">
+              <button data-wish="愿每个人都能平安回家。">平安回家</button>
+              <button data-wish="愿争吵退场，愿和平靠近。">和平靠近</button>
+              <button data-wish="愿明天比今天更安静。">明天更安静</button>
+            </div>
+            <button class="primary-btn" id="makeCard">生成和平卡片</button>
           </div>
-          <button class="primary-btn" id="makeCard">生成和平卡片</button>
           <div class="card" id="wishCard">
             <div class="lantern-card">
               <h3>让明天更安静</h3>
@@ -2342,6 +2448,7 @@
     const audioToggle = document.getElementById('audioToggle');
     const audioTip = document.getElementById('audioTip');
     const musicGate = document.getElementById('musicGate');
+    const lyricRail = document.querySelector('.lyric-rail');
     const progress = document.getElementById('progress');
     const swipeTip = document.getElementById('swipeTip');
     let current = 0;
@@ -2383,9 +2490,13 @@
 
     function updateSlide(skipMusic = false) {
       slides.style.transform = `translate3d(0, ${-current * 100}dvh, 0)`;
+      scenes.forEach((scene, index) => scene.classList.toggle('active', index === current));
       setProgress();
       musicGate.classList.toggle('is-hidden-by-page', current !== 0 || started);
-      swipeTip.style.display = scenes[current].hasAttribute('data-video') ? 'none' : 'block';
+      const isLast = current === scenes.length - 1;
+      swipeTip.classList.toggle('hide', (!started && current === 0) || isLast || scenes[current].hasAttribute('data-video'));
+      lyricRail.classList.toggle('hidden', isLast);
+      lyricRail.classList.toggle('subtle', current >= 7 || scenes[current].hasAttribute('data-video'));
       if (!skipMusic) syncMusic();
       if (!scenes[current].hasAttribute('data-video')) {
         video.pause();
@@ -2397,10 +2508,6 @@
       if (scenes[current].hasAttribute('data-video')) {
         fadeAudio(0, 450, () => bgm.pause());
         return;
-      }
-      const mark = Number(scenes[current].dataset.music);
-      if (!Number.isNaN(mark) && (bgm.paused || Math.abs(bgm.currentTime - mark) > 18)) {
-        bgm.currentTime = mark;
       }
       bgm.volume = 0.82;
       try {
@@ -2860,6 +2967,7 @@
       const input = document.getElementById('wishInput');
       const text = input.value.trim() || '愿每个人都能平安回家。';
       document.getElementById('wishText').textContent = text;
+      document.querySelector('.wish-panel').classList.add('card-ready');
       document.getElementById('wishCard').classList.add('show');
       document.getElementById('saveCard').classList.add('show');
       document.getElementById('shareLink').innerHTML = '扫码观看<br>让明天更安静';
