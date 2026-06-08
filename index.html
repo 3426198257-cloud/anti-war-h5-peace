@@ -358,7 +358,7 @@
       position: fixed;
       left: 24px;
       right: 64px;
-      bottom: calc(86px + var(--safe-bottom));
+      bottom: calc(26px + var(--safe-bottom));
       z-index: 44;
       display: flex;
       align-items: center;
@@ -367,6 +367,7 @@
       transition: opacity .35s ease, transform .35s ease;
     }
 
+    .music-gate.is-hidden-by-page,
     .music-gate.hide {
       opacity: 0;
       transform: translateY(18px);
@@ -491,6 +492,10 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
+    }
+
+    .cover-scene .bottom-action {
+      display: none;
     }
 
     .primary-btn {
@@ -740,10 +745,10 @@
     .ledger-board {
       position: absolute;
       left: 50%;
-      top: 37%;
+      top: 47%;
       z-index: 3;
       width: min(82vw, 380px);
-      height: 42%;
+      height: 34%;
       transform: translateX(-50%);
       border: 1px solid rgba(255,255,255,.13);
       border-radius: 8px;
@@ -761,7 +766,7 @@
       display: grid;
       place-items: center;
       color: rgba(255,244,208,.88);
-      font-size: 20px;
+      font-size: 18px;
       line-height: 1.7;
       text-align: center;
       opacity: .24;
@@ -789,6 +794,10 @@
       cursor: pointer;
       user-select: none;
       transition: opacity .35s ease, transform .35s ease, background .35s ease;
+    }
+
+    .tea-scene .copy p {
+      max-width: 260px;
     }
 
     .interest-chip.done {
@@ -1504,48 +1513,102 @@
     .palm {
       position: absolute;
       left: 50%;
-      bottom: 10%;
+      bottom: 12%;
       width: min(86vw, 430px);
-      height: 43%;
+      height: 40%;
       transform: translateX(-50%);
       opacity: .96;
     }
 
     .palm-scene .copy {
       margin-top: 38px;
-      max-width: min(310px, calc(100vw - 98px));
+      max-width: min(280px, calc(100vw - 110px));
     }
 
     .palm-scene h2 {
-      font-size: clamp(30px, 8.4vw, 42px);
+      font-size: clamp(26px, 7.3vw, 36px);
       line-height: 1.12;
     }
 
     .palm-scene p {
-      max-width: 290px;
-      font-size: 14px;
-      line-height: 1.65;
+      max-width: 250px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .palm::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 8%;
+      width: 118px;
+      height: 118px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255,255,236,.98), rgba(255,225,132,.72) 42%, rgba(255,190,84,.2) 68%, transparent 70%);
+      box-shadow:
+        0 0 44px rgba(255,224,139,.72),
+        0 0 92px rgba(255,214,111,.38);
+      animation: orbBreath 3.8s ease-in-out infinite;
+    }
+
+    .palm::after {
+      content: "";
+      position: absolute;
+      left: 9%;
+      right: 9%;
+      bottom: 18%;
+      height: 34%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 50% 50%, rgba(255,238,178,.34), transparent 68%);
+      filter: blur(8px);
     }
 
     .hand {
       position: absolute;
-      bottom: 0;
-      width: 45%;
-      height: 72%;
-      background: linear-gradient(180deg, #f0d4a5, #b87f62);
+      bottom: 4%;
+      width: 47%;
+      height: 70%;
+      background:
+        radial-gradient(ellipse at 50% 10%, rgba(255,247,219,.94), transparent 28%),
+        linear-gradient(180deg, #f5dcb7 0%, #d29b7c 58%, #aa735e 100%);
       filter: drop-shadow(0 18px 35px rgba(0,0,0,.22));
     }
 
     .hand.left {
-      left: 4%;
-      border-radius: 70px 28px 36px 100px;
-      transform: rotate(12deg);
+      left: 5%;
+      border-radius: 84px 44px 54px 118px / 98px 42px 58px 116px;
+      transform: rotate(11deg);
+      clip-path: polygon(8% 12%, 40% 2%, 88% 13%, 98% 55%, 80% 96%, 28% 100%, 4% 74%);
     }
 
     .hand.right {
-      right: 4%;
-      border-radius: 28px 70px 100px 36px;
-      transform: rotate(-12deg);
+      right: 5%;
+      border-radius: 44px 84px 118px 54px / 42px 98px 116px 58px;
+      transform: rotate(-11deg);
+      clip-path: polygon(12% 13%, 60% 2%, 92% 12%, 96% 74%, 72% 100%, 20% 96%, 2% 55%);
+    }
+
+    .hand::before {
+      content: "";
+      position: absolute;
+      top: -3%;
+      width: 80%;
+      height: 36%;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(255,245,215,.72), rgba(255,255,255,.2)),
+        repeating-linear-gradient(90deg, transparent 0 18%, rgba(120,75,52,.12) 18% 19%, transparent 19% 25%);
+      opacity: .7;
+    }
+
+    .hand.left::before { left: 10%; transform: rotate(-7deg); }
+    .hand.right::before { right: 10%; transform: rotate(7deg); }
+
+    @keyframes orbBreath {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: .88; }
+      50% { transform: translateX(-50%) scale(1.06); opacity: 1; }
     }
 
     .light-word {
@@ -1565,10 +1628,14 @@
     }
 
     .palm-scene .light-word {
-      min-width: 58px;
-      height: 34px;
+      min-width: 18px;
+      width: 18px;
+      height: 18px;
+      padding: 0;
       font-size: 14px;
-      box-shadow: 0 0 22px rgba(255,207,102,.24);
+      border-color: rgba(255,241,190,.18);
+      background: rgba(255,230,150,.22);
+      box-shadow: 0 0 20px rgba(255,207,102,.38);
     }
 
     .light-word::before {
@@ -1581,6 +1648,10 @@
     }
 
     .light-word.on {
+      min-width: 58px;
+      width: auto;
+      height: 32px;
+      padding: 0 12px;
       background: rgba(255, 239, 188, .9);
       color: #59402c;
       transform: scale(1.08);
@@ -1591,20 +1662,21 @@
     .lyrics-line {
       position: absolute;
       left: 24px;
-      right: 24px;
-      top: 28%;
+      right: 78px;
+      top: 31%;
       z-index: 6;
       color: rgba(255,255,255,.82);
-      font-size: 17px;
-      line-height: 1.8;
+      font-size: 14px;
+      line-height: 1.55;
       text-align: center;
+      display: none;
       opacity: 0;
       transform: translateY(10px);
       transition: opacity .45s ease, transform .45s ease;
     }
 
     .lyrics-line.show {
-      opacity: 1;
+      opacity: 0;
       transform: translateY(0);
     }
 
@@ -1662,7 +1734,12 @@
       width: min(100%, 430px);
       margin: 0 auto;
       padding-bottom: 8px;
+      max-height: 58dvh;
+      overflow-y: auto;
+      scrollbar-width: none;
     }
+
+    .wish-panel::-webkit-scrollbar { display: none; }
 
     .wish-input {
       width: 100%;
@@ -1695,7 +1772,7 @@
 
     .card {
       display: none;
-      margin-top: 14px;
+      margin-top: 12px;
       color: #53391f;
     }
 
@@ -1703,8 +1780,8 @@
 
     .lantern-card {
       position: relative;
-      min-height: 410px;
-      padding: 44px 24px 28px;
+      min-height: 338px;
+      padding: 34px 20px 22px;
       text-align: center;
       border-radius: 46% 46% 26px 26px / 14% 14% 20px 20px;
       background:
@@ -1713,8 +1790,8 @@
         radial-gradient(ellipse at 50% 35%, rgba(255,255,255,.62), transparent 42%),
         linear-gradient(180deg, rgba(255,249,222,.96), rgba(249,198,105,.94));
       box-shadow:
-        0 0 70px rgba(255,190,91,.62),
-        0 28px 70px rgba(100,69,28,.3),
+        0 0 56px rgba(255,190,91,.52),
+        0 22px 54px rgba(100,69,28,.24),
         inset 0 0 46px rgba(255,255,255,.48);
       overflow: hidden;
       animation: lanternFloat 4.8s ease-in-out infinite;
@@ -1730,7 +1807,7 @@
       content: "";
       position: absolute;
       top: 24px;
-      bottom: 34px;
+      bottom: 28px;
       width: 2px;
       background: linear-gradient(180deg, transparent, rgba(126,78,28,.18), transparent);
     }
@@ -1742,8 +1819,8 @@
       position: absolute;
       left: 50%;
       bottom: 22px;
-      width: 48px;
-      height: 58px;
+      width: 38px;
+      height: 46px;
       transform: translateX(-50%);
       border-radius: 50% 50% 45% 45%;
       background: radial-gradient(circle at 50% 62%, #fff7c6, #f6a33c 58%, transparent 64%);
@@ -1752,17 +1829,17 @@
 
     .card h3 {
       margin: 0;
-      font-size: 25px;
+      font-size: 23px;
       line-height: 1.2;
       letter-spacing: 0;
     }
 
     .card .wish-text {
-      min-height: 58px;
-      margin: 18px 0;
+      min-height: 46px;
+      margin: 14px 0;
       color: #3a4246;
-      font-size: 18px;
-      line-height: 1.7;
+      font-size: 17px;
+      line-height: 1.55;
     }
 
     .card small {
@@ -1776,7 +1853,7 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 14px;
       color: rgba(83,57,31,.68);
       font-size: 12px;
     }
@@ -1784,7 +1861,10 @@
     .save-card-btn {
       display: none;
       width: 100%;
-      margin-top: 12px;
+      margin-top: 10px;
+      position: sticky;
+      bottom: 0;
+      z-index: 4;
     }
 
     .card.show + .save-card-btn,
@@ -1795,9 +1875,9 @@
     }
 
     #qrImage {
-      width: 96px;
-      height: 96px;
-      padding: 8px;
+      width: 82px;
+      height: 82px;
+      padding: 7px;
       border-radius: 10px;
       background: rgba(255,255,255,.9);
       box-shadow: 0 12px 26px rgba(112,75,32,.16);
@@ -1857,9 +1937,12 @@
     @media (max-height: 650px) {
       .copy { margin-top: 38px; }
       p { font-size: 15px; line-height: 1.65; }
-      .scene { padding-left: 20px; padding-right: 20px; }
+      .scene { padding-left: 20px; padding-right: 60px; }
+      .copy { max-width: min(340px, calc(100vw - 100px)); }
       .table { bottom: 10%; }
       .palm { height: 37%; }
+      .palm-scene .copy { margin-top: 30px; }
+      .palm-scene h2 { font-size: clamp(25px, 7vw, 34px); }
       video { max-height: 58dvh; }
     }
   </style>
@@ -1915,10 +1998,10 @@
         <div class="ledger-board" id="ledgerBoard">
           <div class="ledger-cost">平民伤亡<br>流离失所<br>城市破碎</div>
         </div>
-        <button class="interest-chip" data-interest style="left:12%; top:33%;">资源</button>
-        <button class="interest-chip" data-interest style="right:13%; top:34%;">疆界</button>
-        <button class="interest-chip" data-interest style="left:18%; top:55%;">权力</button>
-        <button class="interest-chip" data-interest style="right:16%; top:57%;">军火</button>
+        <button class="interest-chip" data-interest style="left:12%; top:51%;">资源</button>
+        <button class="interest-chip" data-interest style="right:16%; top:51%;">疆界</button>
+        <button class="interest-chip" data-interest style="left:18%; top:68%;">权力</button>
+        <button class="interest-chip" data-interest style="right:18%; top:68%;">军火</button>
         <div class="complete-line" id="teaDone">利益被写进账本，<br>代价却落在普通人身上。</div>
         <div class="copy">
           <p class="eyebrow">利益的账本</p>
@@ -2171,12 +2254,12 @@
           <span class="hand left"></span>
           <span class="hand right"></span>
         </div>
-        <button class="light-word" data-light="倾听" style="left:14%; top:42%;"></button>
-        <button class="light-word" data-light="原谅" style="left:62%; top:39%;"></button>
-        <button class="light-word" data-light="拥抱" style="left:30%; top:52%;"></button>
-        <button class="light-word" data-light="回家" style="left:67%; top:55%;"></button>
-        <button class="light-word" data-light="明天" style="left:16%; top:66%;"></button>
-        <button class="light-word" data-light="安静" style="left:55%; top:69%;"></button>
+        <button class="light-word" data-light="倾听" style="left:18%; top:44%;"></button>
+        <button class="light-word" data-light="原谅" style="left:68%; top:41%;"></button>
+        <button class="light-word" data-light="拥抱" style="left:35%; top:54%;"></button>
+        <button class="light-word" data-light="回家" style="left:72%; top:57%;"></button>
+        <button class="light-word" data-light="明天" style="left:22%; top:68%;"></button>
+        <button class="light-word" data-light="安静" style="left:58%; top:70%;"></button>
         <div class="dove palm-dove" id="palmDove"><span class="wing"></span><span class="eye"></span><span class="beak"></span></div>
         <div class="copy">
           <p class="eyebrow">和平落在掌心</p>
@@ -2282,6 +2365,7 @@
 
     function hideMusicGate() {
       musicGate.classList.add('hide');
+      musicGate.classList.add('is-hidden-by-page');
     }
 
     scenes.forEach((_, index) => {
@@ -2300,6 +2384,7 @@
     function updateSlide(skipMusic = false) {
       slides.style.transform = `translate3d(0, ${-current * 100}dvh, 0)`;
       setProgress();
+      musicGate.classList.toggle('is-hidden-by-page', current !== 0 || started);
       swipeTip.style.display = scenes[current].hasAttribute('data-video') ? 'none' : 'block';
       if (!skipMusic) syncMusic();
       if (!scenes[current].hasAttribute('data-video')) {
@@ -2357,6 +2442,7 @@
       document.getElementById('startDove').classList.add('fly-feedback');
       started = true;
       audioWanted = true;
+      hideMusicGate();
       bgm.currentTime = 0;
       bgm.volume = 0.82;
       try {
@@ -2777,6 +2863,9 @@
       document.getElementById('wishCard').classList.add('show');
       document.getElementById('saveCard').classList.add('show');
       document.getElementById('shareLink').innerHTML = '扫码观看<br>让明天更安静';
+      setTimeout(() => {
+        document.getElementById('saveCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 80);
     });
 
     document.getElementById('saveCard').addEventListener('click', () => {
